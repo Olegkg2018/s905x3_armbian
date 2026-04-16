@@ -1,0 +1,194 @@
+substitutions:
+  name: jk-sumry-hub
+  device_description: "JK-BMS BLE + Sumry CP3200 RS485 Gateway"
+  external_components_source: github://syssi/esphome-jk-bms@main
+  # ЗАМЕНИТЕ НА MAC АДРЕС ВАШЕГО JK-BMS
+  mac_address: C8:47:80:21:55:53
+  protocol_version: JK02_32S
+  # Настройки пинов RS485 для ESP32-ETH01
+  rs485_tx_pin: GPIO16
+  rs485_rx_pin: GPIO17
+  rs485_dir_pin: GPIO4
+
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  min_version: 2024.6.0
+  project:
+    name: "custom.jk-sumry-gateway"
+    version: 1.0.0
+
+esp32:
+  board: wemos_d1_mini32
+  framework:
+    type: esp-idf
+
+external_components:
+  - source: ${external_components_source}
+    refresh: 0s
+
+wifi:
+  power_save_mode: none
+  fast_connect: true
+  ssid: "MikroTik-C957C7"
+  password: ""
+  manual_ip:
+    static_ip: 192.168.2.12
+    gateway: 192.168.2.1
+    subnet: 255.255.255.0
+  ap:
+    ssid: "${name} Fallback"
+    password: "12345678"
+
+ota:
+  password: "7291d6f0cf0d0650bcb0df0d63188944"
+  platform: esphome
+  on_begin:
+    then:
+      - switch.turn_off: ble_client_switch0
+      - logger.log: "BLE connection suspended for OTA update"
+
+logger:
+  level: DEBUG
+  logs:
+    esp32_ble_tracker: INFO
+    esp32_ble_client: INFO
+    modbus: DEBUG
+    modbus_controller: DEBUG
+
+api:
+  encryption:
+    key: "Lu70TbddiF7LMObpEct94QvT5lvJQCP7N+CbGQJAlRs="
+  reboot_timeout: 30min
+
+# --- BLE Configuration (JK-BMS) ---
+esp32_ble_tracker:
+  scan_parameters:
+    active: false
+
+ble_client:
+  - mac_address: ${mac_address}
+    id: client0
+
+jk_bms_ble:
+  - ble_client_id: client0
+    protocol_version: ${protocol_version}
+    throttle: 60s
+    id: bms0
+
+# --- RS485 Configuration (Sumry Inverter) ---
+uart:
+  id: modbus_uart
+  tx_pin: ${rs485_tx_pin}
+  rx_pin: ${rs485_rx_pin}
+  baud_rate: 9600
+  stop_bits: 1
+  parity: NONE
+
+modbus:
+  id: modbus_hub
+  uart_id: modbus_uart
+  flow_control_pin: ${rs485_dir_pin}
+
+modbus_controller:
+  - id: sumry_inverter
+    address: 0x01
+    modbus_id: modbus_hub
+    setup_priority: -10
+    command_throttle: 500ms
+
+sensor:
+  # --- JK-BMS Sensors ---
+  - platform: jk_bms_ble
+    jk_bms_ble_id: bms0
+    min_cell_voltage: { name: "${name} Min Cell Voltage" }
+    max_cell_voltage: { name: "${name} Max Cell Voltage" }
+    average_cell_voltage: { name: "${name} Avg Cell Voltage" }
+    cell_voltage_1: { name: "${name} Cell Voltage 1" }
+    cell_voltage_2: { name: "${name} Cell Voltage 2" }
+    cell_voltage_3: { name: "${name} Cell Voltage 3" }
+    cell_voltage_4: { name: "${name} Cell Voltage 4" }
+    cell_voltage_5: { name: "${name} Cell Voltage 5" }
+    cell_voltage_6: { name: "${name} Cell Voltage 6" }
+    cell_voltage_7: { name: "${name} Cell Voltage 7" }
+    cell_voltage_8: { name: "${name} Cell Voltage 8" }
+    total_voltage: { name: "${name} Total Voltage" }
+    current: { name: "${name} Current" }
+    power: { name: "${name} Power" }
+    temperature_sensor_1: { name: "${name} BMS Temp 1" }
+    temperature_sensor_2: { name: "${name} BMS Temp 2" }
+    state_of_charge: { name: "${name} BMS SOC" }
+    capacity_remaining: { name: "${name} Capacity Remaining" }
+    
+  # --- Sumry Inverter Sensors (Modbus) ---
+  # ВНИМАНИЕ: Адреса регистров могут отличаться! Проверьте мануал Sumry CP3200.
+  # Ниже приведены примеры для типичных гибридных инверторов.
+  
+  - platform: modbus_controller
+    modbus_controller_id: sumry_inverter
+    id: inv_grid_voltage
+    name: "${name} Grid Voltage"
+    register_type: holding
+    address: 0x0000 
+    unit_of_measurement: "V"
+    accuracy_decimals: 1
+    value_type: U_WORD
+    scale: 0.1
+
+  - platform: modbus_controller
+    modbus_controller_id: sumry_inverter
+    id: inv_battery_voltage
+    name: "${name} Battery Voltage"
+    register_type: holding
+    address: 0x0002
+    unit_of_measurement: "V"
+    accuracy_decimals: 1
+    value_type: U_WORD
+    scale: 0.1
+
+  - platform: modbus_controller
+    modbus_controller_id: sumry_inverter
+    id: inv_soc
+    name: "${name} Inverter SOC"
+    register_type: holding
+    address: 0x0004
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    value_type: U_WORD
+
+  - platform: modbus_controller
+    modbus_controller_id: sumry_inverter
+    id: inv_power
+    name: "${name} Inverter Power"
+    register_type: holding
+    address: 0x0006
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    value_type: S_WORD
+
+binary_sensor:
+  - platform: jk_bms_ble
+    balancing: { name: "${name} Balancing" }
+    charging: { name: "${name} Charging" }
+    discharging: { name: "${name} Discharging" }
+    online_status: { name: "${name} BMS Online" }
+
+switch:
+  - platform: jk_bms_ble
+    charging: { name: "${name} Charge Switch" }
+    discharging: { name: "${name} Discharge Switch" }
+    balancer: { name: "${name} Balancer Switch" }
+  
+  - platform: ble_client
+    ble_client_id: client0
+    name: "${name} Enable BT Connection"
+    id: ble_client_switch0
+
+  - platform: restart
+    name: "${name} Restart ESP32"
+
+text_sensor:
+  - platform: jk_bms_ble
+    errors: { name: "${name} BMS Errors" }
+    software_version: { name: "${name} BMS SW Version" }
+    hardware_version: { name: "${name} BMS HW Version" }
