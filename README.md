@@ -1,7 +1,7 @@
---- README.md (原始)
+--- README.md 
 
 
-+++ README.md (修改后)
++++ README.md 
 # s905x3_armbian - Home Assistant Core на TV-приставке
 
 [![Platform](https://img.shields.io/badge/platform-ARM64-blue.svg)](https://www.armbian.com/)
@@ -106,5 +106,35 @@ s905x3_armbian/
 ---
 
 **Made with ❤️ for the Home Assistant Community**
+Полезное
+Технічна інформація з інтеграціі інверторів, mppt та BMS до ESPHome:
+PowMr (RS232) - github.com/odya/esphome-powmr-hybrid-inverter 
+Easun, ISolar, Anenji (RS232)  - github.com/syssi/esphome-smg-ii
+Voltronic  - github.com/syssi/esphome-votronic
+Victron - github.com/krahabb/esphome-victron-vedirect
+PipSolar (RS232) - github.com/syssi/esphome-pipsolar
+APC UPS (RS232) - github.com/syssi/esphome-apc-ups
+Must (RS485) - github.com/vladyspavlov/esphome-must-inverter
+Growatt (RS485) - github.com/klatremis/esphome-for-growatt
+Deye (RS485) - github.com/Lewa-Reka/esphome-deye-inverter
+Deye (RS485) - github.com/klatremis/esphome-for-deye
+Solis (RS485) - github.com/hn/ginlong-solis
+SRNE (RS485) - github.com/topics/srne
+PACE BMS (RS485) - github.com/syssi/esphome-pace-bms
+Epever MPPT (RS485) - devices.esphome.io/devices/epever_mptt_tracer_an
+JK-BMS (UART-TTL or BLE) - github.com/syssi/esphome-jk-bms
+Daly-BMS (UART) - esphome.io/components/sensor/daly_bms.html
+Daly-BMS (BLE) - github.com/syssi/esphome-daly-bms
+Налаштування ESPHome - dou.ua/forums
+Modbus Controller - esphome.io
+Інформація з підключення різних модулів / сенсорів до ESPHome - github.com/esphome/esphome-docs
+Ethernet LAN8720 - github.com/flusflas/esp32-ethernet
+Плата адаптера модуля ESP32 дозволяє підключити будь який пристрій з інтерфейсами: RS232, RS485, UART.
+Приклади конфігурацій для ESPHome:
+SMG II + PZEM + JK-BMS - завантажити
+PowMr + PZEM + JK-BMS - завантажити
+Easun SMH III - завантажити
+JK-BMS  4S 12V - завантажити
+Epever Tracer-AN - завантажити
 
 *Последнее обновление: $(date +%Y-%m-%d)*
