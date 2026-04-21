@@ -50,7 +50,7 @@
 
 ## 🚀 Быстрый старт
 
-1. Скачайте образ Armbian для S905X3
+1. Скачайте образ Armbian для S905X3 https://github.com/ophub/amlogic-s9xxx-armbian
 2. Запишите образ на microSD карту или установите на eMMC
 3. Настройте сеть и подключитесь по SSH
 4. Установите зависимости для Home Assistant
