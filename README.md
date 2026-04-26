@@ -42,7 +42,8 @@
 
 ## 📖 Содержание документации
 
-- [Установка Armbian](https://bit.c0d.su/instruktsiya-po-ustanovke-armbian-linux-na-tv-boks-s905x-x96-1-8gb/)
+- [Установка Armbian]
+(https://bit.c0d.su/instruktsiya-po-ustanovke-armbian-linux-na-tv-boks-s905x-x96-1-8gb/)
 (https://ru.x96mini.com/ru/pages/x96-max-plus-android-tv-box)
 (https://www.youtube.com/watch?v=1LafEs_J-cA)
 (https://mynobook.blogspot.com/2022/10/x96max-linux.html)
