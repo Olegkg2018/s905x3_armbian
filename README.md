@@ -42,7 +42,10 @@
 
 ## 📖 Содержание документации
 
-- [Установка Armbian](docs/installation.md)
+- [Установка Armbian](https://bit.c0d.su/instruktsiya-po-ustanovke-armbian-linux-na-tv-boks-s905x-x96-1-8gb/)
+(https://ru.x96mini.com/ru/pages/x96-max-plus-android-tv-box)
+(https://www.youtube.com/watch?v=1LafEs_J-cA)
+(https://mynobook.blogspot.com/2022/10/x96max-linux.html)
 - [Настройка Home Assistant Core](docs/homeassistant-setup.md)
 - [Оптимизация системы](docs/optimization.md)
 - [Резервное копирование](docs/backup.md)
