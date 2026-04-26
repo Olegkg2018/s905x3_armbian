@@ -47,6 +47,12 @@
 (https://ru.x96mini.com/ru/pages/x96-max-plus-android-tv-box)
 (https://www.youtube.com/watch?v=1LafEs_J-cA)
 (https://mynobook.blogspot.com/2022/10/x96max-linux.html)
+Отредактируйте файл uEnv.txt или extlinux.conf (в зависимости от сборки), указав правильный DTB-файл (дерево устройств) под ваш процессор и объем ОЗУ
+
+- u-boot.ext из комплекта вашей сборки, переименовав его в u-boot.bin
+- Установка на еммс armbian-install -m yes -a no
+
+
 - [Настройка Home Assistant Core](docs/homeassistant-setup.md)
 - [Оптимизация системы](docs/optimization.md)
 - [Резервное копирование](docs/backup.md)
