@@ -1,96 +1,133 @@
-## 2. Скрипт `scripts/prepare_storage.sh`
-
-Этот скрипт готовит внешний диск, форматирует его и переносит данные.
-
-```bash
 #!/bin/bash
 # prepare_storage.sh - Настройка внешнего диска для S905X3 Armbian
-# Монтирование в /mnt/data и перенос тяжелых каталогов
+# Монтирование в /mnt/data и перенос тяжёлых каталогов
+#
+# Использование: sudo bash prepare_storage.sh
 
-set -e
+set -euo pipefail
+
+# --- Проверка прав root ---
+if [[ $EUID -ne 0 ]]; then
+  echo "Ошибка: скрипт должен запускаться от root (sudo bash prepare_storage.sh)"
+  exit 1
+fi
 
 MOUNT_POINT="/mnt/data"
 TARGET_DISK=""
 
-echo "🔍 Поиск подключенных дисков..."
-lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
-
+echo "=== Настройка внешнего диска для S905X3 Armbian ==="
 echo ""
-read -p "Введите имя устройства для форматирования (например, sda1 или sdb1): " TARGET_DISK
 
-if [ -z "$TARGET_DISK" ]; then
-    echo "❌ Устройство не указано. Выход."
-    exit 1
+# --- Показываем список дисков ---
+echo "Доступные блочные устройства:"
+lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
+echo ""
+
+# --- Ввод устройства ---
+read -rp "Введите имя устройства для форматирования (например, sda или sdb1): " TARGET_DISK
+
+if [[ -z "$TARGET_DISK" ]]; then
+  echo "Ошибка: устройство не указано. Выход."
+  exit 1
 fi
 
 DEV_PATH="/dev/${TARGET_DISK}"
 
-if [ ! -b "$DEV_PATH" ]; then
-    echo "❌ Устройство $DEV_PATH не найдено!"
-    exit 1
+if [[ ! -b "$DEV_PATH" ]]; then
+  echo "Ошибка: устройство $DEV_PATH не найдено!"
+  exit 1
 fi
 
-echo "⚠️  ВНИМАНИЕ: Все данные на $DEV_PATH будут уничтожены!"
-read -p "Вы уверены? (yes/no): " CONFIRM
-if [ "$CONFIRM" != "yes" ]; then
-    echo "Операция отменена."
-    exit 0
+# --- Защита от случайного форматирования системного диска ---
+ROOT_DEV=$(findmnt -n -o SOURCE /)
+if [[ "$DEV_PATH" == "$ROOT_DEV" || "$ROOT_DEV" == ${DEV_PATH}* ]]; then
+  echo "Ошибка: $DEV_PATH является системным диском. Операция запрещена!"
+  exit 1
 fi
 
-echo "🛠 Форматирование $DEV_PATH в ext4..."
-mkfs.ext4 -F "$DEV_PATH"
+# --- Предупреждение и подтверждение ---
+echo ""
+echo "ВНИМАНИЕ: Все данные на $DEV_PATH будут уничтожены!"
+read -rp "Вы уверены? (yes/no): " CONFIRM
+if [[ "$CONFIRM" != "yes" ]]; then
+  echo "Операция отменена."
+  exit 0
+fi
 
-echo "📁 Создание точки монтирования $MOUNT_POINT..."
+# --- Форматирование ---
+echo "Форматирование $DEV_PATH в ext4..."
+mkfs.ext4 -F -L armbian-data "$DEV_PATH"
+
+# --- Создание точки монтирования ---
+echo "Создание точки монтирования $MOUNT_POINT..."
 mkdir -p "$MOUNT_POINT"
 
-echo "🔗 Добавление в /etc/fstab..."
+# --- Получение UUID и добавление в /etc/fstab ---
 UUID=$(blkid -s UUID -o value "$DEV_PATH")
+if [[ -z "$UUID" ]]; then
+  echo "Ошибка: не удалось получить UUID устройства."
+  exit 1
+fi
+
+echo "Добавление в /etc/fstab (UUID=$UUID)..."
+# Удаляем старую запись для этой точки монтирования, если есть
 if grep -q "$MOUNT_POINT" /etc/fstab; then
-    sed -i "\|$MOUNT_POINT|d" /etc/fstab
+  sed -i "\|$MOUNT_POINT|d" /etc/fstab
 fi
 echo "UUID=$UUID $MOUNT_POINT ext4 defaults,noatime 0 2" >> /etc/fstab
 
-echo "⏳ Монтирование..."
+# --- Монтирование ---
+echo "Монтирование..."
 mount -a
 
 if ! mountpoint -q "$MOUNT_POINT"; then
-    echo "❌ Ошибка монтирования! Проверьте /etc/fstab."
-    exit 1
+  echo "Ошибка монтирования! Проверьте /etc/fstab и dmesg."
+  exit 1
 fi
 
-echo "📦 Перенос данных..."
-# Останавливаем сервисы, которые могут писать в эти папки
-systemctl stop docker || true
-systemctl stop home-assistant@homeassistant || true
+echo "Диск успешно смонтирован в $MOUNT_POINT"
 
-DIRS_TO_MOVE=("docker" "homeassistant" "srv" "backup")
+# --- Остановка сервисов перед переносом данных ---
+echo ""
+echo "Остановка сервисов..."
+systemctl stop docker 2>/dev/null || true
+systemctl stop home-assistant@homeassistant 2>/dev/null || true
+
+# --- Перенос каталогов ---
+# Переносим только те каталоги, которые существуют и не являются симлинками
+DIRS_TO_MOVE=("homeassistant" "srv" "backup")
 
 for dir in "${DIRS_TO_MOVE[@]}"; do
-    SRC="/$dir"
-    DST="$MOUNT_POINT/$dir"
-    
-    if [ -d "$SRC" ] && [ ! -L "$SRC" ]; then
-        echo "Перенос /$dir -> $DST"
-        rsync -avxHAX "$SRC/" "$DST/"
-        mv "$SRC" "${SRC}.bak"
-        ln -s "$DST" "$SRC"
-        echo "✅ /$dir перенесен и заменен ссылкой."
-    fi
+  SRC="/$dir"
+  DST="$MOUNT_POINT/$dir"
+
+  if [[ -d "$SRC" && ! -L "$SRC" ]]; then
+    echo "Перенос $SRC -> $DST"
+    mkdir -p "$DST"
+    rsync -avxHAX "$SRC/" "$DST/"
+    mv "$SRC" "${SRC}.bak"
+    ln -s "$DST" "$SRC"
+    echo "OK: $SRC перенесён, создана символическая ссылка."
+  fi
 done
 
-# Особый случай для /var/lib/docker если он есть
-if [ -d "/var/lib/docker" ] && [ ! -L "/var/lib/docker" ]; then
-    mkdir -p "$MOUNT_POINT/docker"
-    rsync -avxHAX /var/lib/docker/ "$MOUNT_POINT/docker/"
-    mv /var/lib/docker /var/lib/docker.bak
-    ln -s "$MOUNT_POINT/docker" /var/lib/docker
-    echo "✅ /var/lib/docker перенесен."
+# --- Перенос /var/lib/docker (особый случай) ---
+if [[ -d "/var/lib/docker" && ! -L "/var/lib/docker" ]]; then
+  echo "Перенос /var/lib/docker..."
+  mkdir -p "$MOUNT_POINT/docker"
+  rsync -avxHAX /var/lib/docker/ "$MOUNT_POINT/docker/"
+  mv /var/lib/docker /var/lib/docker.bak
+  ln -s "$MOUNT_POINT/docker" /var/lib/docker
+  echo "OK: /var/lib/docker перенесён."
 fi
 
-echo "🚀 Перезапуск сервисов..."
+# --- Перезапуск сервисов ---
+echo ""
+echo "Перезапуск сервисов..."
 systemctl daemon-reload
-systemctl start docker || true
-systemctl start home-assistant@homeassistant || true
+systemctl start docker 2>/dev/null || true
+systemctl start home-assistant@homeassistant 2>/dev/null || true
 
-echo "✅ Готово! Внешний диск настроен и используется."
+echo ""
+echo "=== Готово! Внешний диск настроен и используется ==="
 df -h | grep "$MOUNT_POINT"
