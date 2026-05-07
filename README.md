@@ -1,5 +1,24 @@
 # s905x3_armbian — Home Assistant Core на TV-приставке
 
+---
+
+## 🌐 Language / Мова / Мова
+
+**[English](docs/en/README.md)** | **[Русский](README.md)** | **[Українська](docs/uk/README.md)**
+
+> 📚 Документація доступна трьома мовами:
+> - **Русский** — основная документация (README.md, README_*.md)
+> - **Українська** — повний переклад в каталозі `docs/uk/`
+> - **English** — coming soon in `docs/en/`
+
+### 📝 Доступні інструкції українською
+
+- [🏠 Встановлення Home Assistant](docs/uk/README_homeassistent.md)
+- [🌐 Cloudflare Tunnel для віддаленого доступу](docs/uk/README_cloudflare_tunnel.md)
+- [📡 ESPHome — встановлення та налаштування](docs/uk/README_esphome.md)
+
+
+
 [![Platform](https://img.shields.io/badge/platform-ARM64-blue.svg)](https://www.armbian.com/)
 [![Device](https://img.shields.io/badge/device-S905X3-orange.svg)](https://en.wikipedia.org/wiki/Amlogic)
 [![RAM](https://img.shields.io/badge/RAM-4GB-green.svg)]()
