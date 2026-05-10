@@ -180,7 +180,7 @@ docker ps
 ```
 CONTAINER ID   IMAGE                                      COMMAND         PORTS
 xxxxxxxxx      ghcr.io/home-assistant/home-assistant:stable   "/init"   0.0.0.0:8123->8123/tcp
-xxxxxxxxx      portainer/portainer-ce:latest                  "/portainer" 0.0.0.0:9000->9000/tcp
+xxxxxxxxx      portainer/portainer-ce:latest                  "/portainer" 0.0.0.0:9443->9443/tcp
 ```
 
 ---
@@ -231,7 +231,7 @@ docker restart homeassistant
 #### 1. Откройте Portainer:
 
 ```
-http://<IP-адрес-приставки>:9000
+http://<IP-адрес-приставки>:9443
 ```
 
 #### 2. Перейдите в **Containers** → найдите контейнер `homeassistant` → нажмите **>_ Console**
@@ -292,7 +292,7 @@ docker rm -f homeassistant
 
 ### Через Portainer (веб-интерфейс)
 
-1. Откройте Portainer: `http://<IP>:9000`
+1. Откройте Portainer: `http://<IP>:9443`
 2. Перейдите в **Containers**
 3. Выберите контейнер `homeassistant`
 4. Используйте кнопки:
