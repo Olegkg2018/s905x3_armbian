@@ -104,7 +104,7 @@ Docker version 24.x.x, build ...
 Portainer — это веб-интерфейс для управления Docker-контейнерами. Скрипт автоматически:
 
 - Создаст Docker volume `portainer_data`
-- Запустит контейнер Portainer на порту **9000**
+- Запустит контейнер Portainer на порту **9443**
 - Настроит автоматический перезапуск контейнера
 
 **Доступ к Portainer:**
@@ -112,7 +112,7 @@ Portainer — это веб-интерфейс для управления Docke
 Откройте браузер и перейдите по адресу:
 
 ```
-http://<IP-адрес-приставки>:9000
+http://<IP-адрес-приставки>:9443
 ```
 
 При первом входе создайте учётную запись администратора:
@@ -132,7 +132,7 @@ docker ps
 
 ```
 CONTAINER ID   IMAGE                          COMMAND        PORTS
-xxxxxxxxx      portainer/portainer-ce:latest  "/portainer"   0.0.0.0:9000->9000/tcp
+xxxxxxxxx      portainer/portainer-ce:latest  "/portainer"   0.0.0.0:9443->9443/tcp
 ```
 
 ---
