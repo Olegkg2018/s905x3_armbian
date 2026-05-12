@@ -38,7 +38,7 @@
 #### 1.2. Добавьте ваш домен
 
 1. Нажмите **Add a Site**
-2. Введите ваш домен (например, `mydomain.tk`)
+2. Введите ваш домен (например, `mydomain.pp.ua`)
 3. Выберите план **Free** и нажмите **Continue**
 
 #### 1.3. Настройте DNS-сервера
@@ -161,7 +161,7 @@ ha
 
 **Domain:**
 ```
-mydomain.tk
+mydomain.pp.ua
 ```
 (ваш домен)
 
@@ -190,7 +190,7 @@ http://homeassistant:8123
 
 ---
 
-### Шаг 5: Настройка Home Assistant
+### Шаг 5: Настройка Home Assistant (не обязательно)
 
 #### 5.1. Добавьте ваш домен в `configuration.yaml`
 
@@ -210,11 +210,11 @@ http:
     - 192.168.0.0/16  # Локальная сеть
     - 10.0.0.0/8      # Локальная сеть
   # Добавьте ваш домен
-  external_url: https://ha.mydomain.tk
+  external_url: https://ha.mydomain.pp.ua
   internal_url: http://homeassistant:8123
 ```
 
-> ⚠️ **Замените `ha.mydomain.tk` на ваш реальный домен!**
+> ⚠️ **Замените `ha.mydomain.pp.ua` на ваш реальный домен!**
 
 Сохраните файл (`Ctrl+O`, `Enter`, `Ctrl+X`).
 
@@ -233,7 +233,7 @@ docker restart homeassistant
 Откройте браузер (или мобильное приложение Home Assistant) и перейдите по адресу:
 
 ```
-https://ha.mydomain.tk
+https://ha.mydomain.pp.ua
 ```
 
 ✅ **Вы должны увидеть интерфейс Home Assistant с зелёным замком SSL!**
@@ -250,7 +250,7 @@ https://ha.mydomain.tk
 2. При первом запуске введите URL:
 
    ```
-   https://ha.mydomain.tk
+   https://ha.mydomain.pp.ua
    ```
 
 3. Войдите с вашими учётными данными
@@ -268,7 +268,7 @@ https://ha.mydomain.tk
 1. В Zero Trust Dashboard перейдите в **Access** → **Applications**
 2. Нажмите **Add an application** → **Self-hosted**
 3. Задайте имя (например, `Home Assistant Access`)
-4. Укажите домен: `ha.mydomain.tk`
+4. Укажите домен: `ha.mydomain.pp.ua`
 5. Добавьте политику доступа:
    - **Rule name**: любое (например, `Allow my email`)
    - **Rule action**: **Allow**
@@ -316,7 +316,7 @@ docker rm -f cloudflared-tunnel
 
 ## 🔧 Решение проблем
 
-### Проблема 1: Не открывается сайт `ha.mydomain.tk`
+### Проблема 1: Не открывается сайт `ha.mydomain.pp.ua`
 
 **Причины:**
 
@@ -346,7 +346,7 @@ http:
     - 172.16.0.0/12
     - 192.168.0.0/16
     - 10.0.0.0/8
-  external_url: https://ha.mydomain.tk
+  external_url: https://ha.mydomain.pp.ua
   internal_url: http://homeassistant:8123
 ```
 
@@ -385,7 +385,7 @@ docker restart homeassistant
 1. Откройте приложение Home Assistant
 2. Перейдите в **Настройки** → **Профиль** → **Подключения**
 3. Удалите старое подключение
-4. Добавьте новое с URL: `https://ha.mydomain.tk`
+4. Добавьте новое с URL: `https://ha.mydomain.pp.ua`
 
 ---
 
