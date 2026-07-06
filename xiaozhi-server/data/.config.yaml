@@ -3,6 +3,10 @@
 
 prompt_template: agent-base-prompt-ru.txt # Использование чистого шаблона без китайских иероглифов
 
+server:
+  port: 8007
+
+
 # 1. Выбранные модули для обработки голоса и интеллекта
 selected_module:
   VAD: SileroVAD             # Голосовая активность (локально, легкая модель Silero)
