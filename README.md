@@ -78,7 +78,10 @@ s905x3_armbian/
 
 Проект поддерживает создание умной колонки на базе модуля **Xiaozhi AI Voice** (ESP32-S3). Помощник понимает состояние ваших сенсоров в Home Assistant и может отвечать на вопросы из интернета на русском и украинском языках.
 
-* 📖 **Инструкция**: [README_xiaozhi_voice.md](README_xiaozhi_voice.md)
+В репозиторий добавлена папка [xiaozhi-server/](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/) с файлами конфигурации и плагинами локального сервера на S905x3 для адаптации под Алису, поддержки голосового перебивания (barge-in), прогноза погоды, новостей Украины, Google-поиска и умного проигрывания музыки с автозагрузкой из интернета.
+
+* 📖 **Инструкция по настройке и запуску**: [README_xiaozhi_voice.md](README_xiaozhi_voice.md)
+* 🖥️ **Конфигурации и плагины сервера**: [xiaozhi-server/](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/)
 * 🛒 **Купить модуль**: [AliExpress](https://www.aliexpress.com/item/1005009398980859.html)
 
 ## 🚀 Быстрый старт
@@ -95,7 +98,7 @@ s905x3_armbian/
 |---|---|
 | Установка Armbian | [README_install_armbian.md](README_install_armbian.md) |
 | Установка Home Assistant | [README_homeassistent.md](README_homeassistent.md) |
-| Голосовой помощник Xiaozhi | [README_xiaozhi_voice.md](README_xiaozhi_voice.md) |
+| Голосовой помощник (Локальный сервер) | [README_xiaozhi_voice.md](README_xiaozhi_voice.md) |
 | ESP32-шлюз (BMS) | [README_esp32.md](README_esp32.md) |
 | Wi-Fi точка доступа | [Add_AP.md](Add_AP.md) |
 
@@ -110,4 +113,5 @@ s905x3_armbian/
 * [Документация Home Assistant](https://www.home-assistant.io/docs/)
 
 ---
-**Последнее обновление**: 2026-05-07
+**Последнее обновление**: 2026-07-06
+
