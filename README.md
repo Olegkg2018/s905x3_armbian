@@ -24,7 +24,7 @@
 ## 📋 Описание проекта
 
 <p align="center">
-  <img src="docs/images/zigbee-hardware.jpg" alt="Nexbox A9X с Zigbee USB-донглом ZG-808Z" width="500">
+  <img src="docs/images/zigbee-hardware.jpg" alt="Nexbox A9X с Zigbee USB-донглом ZG-808Z" width="167">
   <br>
   <em>Nexbox A9X с Zigbee USB-донглом ZG-808Z</em>
 </p>

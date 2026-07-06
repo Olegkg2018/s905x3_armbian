@@ -26,6 +26,12 @@
 
 ## 📋 Опис проєкту
 
+<p align="center">
+  <img src="../../docs/images/zigbee-hardware.jpg" alt="Nexbox A9X з Zigbee USB-донглом ZG-808Z" width="167">
+  <br>
+  <em>Nexbox A9X з Zigbee USB-донглом ZG-808Z</em>
+</p>
+
 Проєкт присвячений розгортанню **Home Assistant Core** на TV-приставці з процесором **Amlogic S905X3** (4 GB RAM / 32–64 GB eMMC) під управлінням **Armbian**.
 
 Рішення перетворює звичайну ТВ-приставку на повноцінний сервер розумного дому з мінімальними витратами енергії та коштів.
