@@ -1,0 +1,91 @@
+# Конфигурационный файл переопределений для умной колонки "Алиса" (Smart Speaker Override)
+# Этот файл автоматически сливается с основным config.yaml
+
+prompt_template: agent-base-prompt-ru.txt # Использование чистого шаблона без китайских иероглифов
+
+# 1. Выбранные модули для обработки голоса и интеллекта
+selected_module:
+  VAD: SileroVAD             # Голосовая активность (локально, легкая модель Silero)
+  ASR: GroqASR               # Распознавание речи (Groq Whisper - субсекундная задержка)
+  LLM: DeepSeekLLM           # Интеллект (DeepSeek-Chat - умный, дешевый, отлично говорит по-русски)
+  VLLM: ChatGLMVLLM          # Модель для зрения (при наличии камеры)
+  TTS: EdgeTTS               # Синтез речи (Edge-TTS - высокое качество, бесплатно)
+  Memory: nomem              # nomem | mem_local_short (память диалога)
+  Intent: function_call      # function_call | nointent (активация вызова плагинов/инструментов)
+
+# 2. Персонаж голосового ассистента - Алиса
+prompt: |
+  Ты — Алиса, умный голосовой помощник, встроенный в умную колонку. Твой характер: дружелюбный, вежливый, но живой и с легким чувством юмора. ты отзывчива и готова помочь.
+  Инструкции по общению:
+  - Общайся на русском языке.
+  - Твои ответы будут озвучиваться голосом, поэтому пиши КРАТКО, ЕМКО и ЕСТЕСТВЕННО, как в живом диалоге.
+  - Не используй длинные списки, таблицы или громоздкие тексты. Если нужно перечислить что-то, выбери 2-3 самых главных пункта.
+  - Избегай markdown-разметки (звездочки, решетки, жирный шрифт), так как синтезатор речи может прочитать их некорректно. Пиши обычным текстом с правильными знаками препинания.
+  - Успешно вызывай встроенные функции для проверки погоды (get_weather_ru), новостей (get_news_ru), поиска в интернете (web_search) и музыки (play_music).
+
+# 3. Настройки системных сообщений на русском языке
+system_error_response: "Ой, что-то пошло не так на сервере. Пожалуйста, повторите еще раз через секунду."
+
+exit_commands:
+  - "выход"
+  - "закройся"
+  - "стоп"
+  - "пока"
+  - "хватит"
+  - "выключись"
+
+wakeup_words:
+  - "алиса"
+  - "алисочка"
+  - "слушай алиса"
+  - "привет алиса"
+
+# 4. Активация инструментов (плагинов) для LLM
+Intent:
+  function_call:
+    type: function_call
+    functions:
+      - get_weather_ru       # Наш новый русский плагин погоды
+      - get_news_ru          # Наш новый русский плагин новостей Украины
+      - play_music           # Воспроизведение музыки (поиск по названию, жанру и автоскачивание из интернета)
+      - web_search           # Поиск в Google (бесплатно, без API ключей)
+
+# 5. Детальные настройки модулей (ASR, LLM, TTS)
+ASR:
+  # Настройки Groq ASR (Whisper) - Рекомендуется для мгновенной работы
+  GroqASR:
+    type: openai
+    api_key: "ВАШ_GROQ_API_KEY"  # Замените на ваш API-ключ с console.groq.com
+    base_url: https://api.groq.com/openai/v1/audio/transcriptions
+    model_name: whisper-large-v3-turbo
+    output_dir: tmp/
+
+  # Альтернатива: Локальный Vosk ASR (для полной приватности и оффлайн-работы)
+  # Если хотите использовать Vosk, измените selected_module.ASR на VoskASR
+  VoskASR:
+    type: vosk
+    model_path: "models/vosk-model-small-ru-0.22" # Скачайте модель с alphacephei.com/vosk/models
+    output_dir: tmp/
+
+LLM:
+  # Настройки DeepSeek
+  DeepSeekLLM:
+    type: openai
+    model_name: deepseek-chat
+    url: https://api.deepseek.com/v1
+    api_key: "ВАШ_DEEPSEEK_API_KEY" # Замените на ваш API-ключ с platform.deepseek.com
+
+  # Альтернатива: Локальная Ollama (например, qwen2.5:7b-instruct или gemma2:2b)
+  # Если хотите полностью локальный ИИ, измените selected_module.LLM на OllamaLLM
+  OllamaLLM:
+    type: ollama
+    model_name: qwen2.5:7b-instruct
+    base_url: http://localhost:11434
+
+TTS:
+  # Настройки EdgeTTS для русского языка
+  EdgeTTS:
+    type: edge
+    voice: ru-RU-SvetlanaNeural  # ru-RU-SvetlanaNeural (женский) или ru-RU-DmitryNeural (мужской)
+    output_dir: tmp/
+    language: "русский"

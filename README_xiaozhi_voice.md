@@ -44,9 +44,32 @@
 
 ---
 
+## 💻 Локальный сервер умной колонки «Алиса» на S905x3 (Armbian)
+
+Если вы хотите развернуть свой собственный приватный сервер на S905x3 (Armbian), который будет полностью заменять оригинальное китайское облако, в репозитории подготовлена сборка в папке [xiaozhi-server/](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/).
+
+### Возможности локальной сборки:
+* **Адаптация под «Алису»**: Исключены любые иероглифы в дикторской речи и подсказках. Создан чистый шаблон системного промпта [agent-base-prompt-ru.txt](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/agent-base-prompt-ru.txt) и русифицирован плеер.
+* **Новости Украины**: Разработан плагин [get_news_ru.py](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/plugins_func/functions/get_news_ru.py), считывающий актуальные новости через RSS-ленту «Украинской Правды».
+* **Погода без API-ключей**: Плагин [get_weather_ru.py](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/plugins_func/functions/get_weather_ru.py) автоматически делает геокодинг любого города и получает погоду с Open-Meteo.
+* **Свободный поиск в Google**: Плагин [web_search.py](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/plugins_func/functions/web_search.py) напрямую парсит результаты google.com на русском языке без ключей API.
+* **Умное проигрывание музыки из интернета**: Плагин [play_music.py](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/plugins_func/functions/play_music.py) ищет песни локально, а если их нет — озвучивает статус, находит и скачивает трек с YouTube (через `yt-dlp`), конвертирует в MP3 с помощью `ffmpeg` и стримит в динамик колонки. Поддерживает произвольные запросы (например, *«включи спокойную музыку»*, *«песню Алсу Иногда»* и т.д.).
+
+### Быстрый запуск на S905x3:
+1. Зарегистрируйте ключи API: Groq ASR (бесплатно на console.groq.com) и DeepSeek LLM.
+2. Пропишите ключи в файле [xiaozhi-server/data/.config.yaml](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/data/.config.yaml).
+3. Запустите через Docker Compose:
+   ```bash
+   cd xiaozhi-server
+   docker-compose up -d
+   ```
+
+---
+
 ## 📂 Файлы в репозитории
 * `README_xiaozhi_voice.md` — эта инструкция (RU).
 * [docs/uk/README_xiaozhi_voice.md](docs/uk/README_xiaozhi_voice.md) — українська версія.
+* [xiaozhi-server/](file:///home/oleg/s905x/s905x3_armbian/xiaozhi-server/) — конфигурации и плагины локального сервера «Алисы» для S905x3.
 
 ---
 **Автор проекта**: Olegkg2018
