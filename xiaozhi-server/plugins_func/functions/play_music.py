@@ -188,37 +188,66 @@ async def handle_music_command(conn: "ConnectionHandler", song_name: str):
     global MUSIC_CACHE
 
     conn.logger.bind(tag=TAG).info(f"Обработка музыкального запроса: {song_name}")
-    
+    # Сохраняем sentence_id хода диалога, в рамках которого была вызвана команда.
+    # chat() дожидается этой задачи (см. register_pending_tool_task) перед тем,
+    # как закрыть ход, поэтому в норме sentence_id не должен успеть смениться.
+    # Если всё же сменился (например, из-за таймаута ожидания) — не проигрываем
+    # музыку "поверх" уже нового хода диалога, а просто логируем это.
+    started_sentence_id = conn.sentence_id
+
     # 1. Если указано имя, ищем в локальной папке
     if song_name != "random" and len(MUSIC_CACHE["music_files"]) > 0:
         best_match = _find_best_match(song_name, MUSIC_CACHE["music_files"])
         if best_match:
             conn.logger.bind(tag=TAG).info(f"Найдена локальная музыка: {best_match}")
-            await play_local_music(conn, specific_file=best_match)
+            await play_local_music(
+                conn, specific_file=best_match, expected_sentence_id=started_sentence_id
+            )
             return True
 
     # 2. Если локально не найдено, ищем в интернете
     if song_name != "random":
         temp_song_name = "online_music_temp.mp3"
         temp_song_path = os.path.join(MUSIC_CACHE["music_dir"], temp_song_name)
-        
+
         intro_text = f"Ищу песню «{song_name}» в интернете."
         await speak_message(conn, intro_text)
-        
+
         # Скачиваем в фоновом потоке, чтобы не вешать вебсокет
         success = await asyncio.to_thread(
             _search_and_download_youtube, song_name, temp_song_path
         )
-        
+
+        # chat() ждёт эту задачу не дольше tool_call_timeout — если скачивание
+        # заняло дольше, ход диалога уже мог смениться. Явно логируем это,
+        # вместо того чтобы молча проигрывать трек "в чужой" ход или так же
+        # молча его терять.
+        if conn.sentence_id != started_sentence_id:
+            conn.logger.bind(tag=TAG).warning(
+                f"Музыка для '{song_name}' скачалась после смены хода диалога "
+                f"(было {started_sentence_id}, стало {conn.sentence_id}) — "
+                f"пользователь уже не ждёт этот трек, пропускаем воспроизведение"
+            )
+            from core.utils import dashboard_shared as ds
+            ds.add_event(
+                f"Музыка: трек «{song_name}» скачан слишком поздно, ход диалога уже сменился — пропущен"
+            )
+            return False
+
         if success and os.path.exists(temp_song_path):
-            await play_local_music(conn, specific_file=temp_song_name, clean_display_name=song_name)
+            await play_local_music(
+                conn,
+                specific_file=temp_song_name,
+                clean_display_name=song_name,
+                expected_sentence_id=started_sentence_id,
+            )
             return True
         else:
             await speak_message(conn, "К сожалению, мне не удалось найти или скачать этот трек.")
             return False
 
     # 3. Если random - играем случайную локальную
-    await play_local_music(conn)
+    await play_local_music(conn, expected_sentence_id=started_sentence_id)
     return True
 
 
@@ -235,9 +264,23 @@ def _get_random_play_prompt(song_name):
     return random.choice(prompts)
 
 
-async def play_local_music(conn: "ConnectionHandler", specific_file=None, clean_display_name=None):
+async def play_local_music(
+    conn: "ConnectionHandler",
+    specific_file=None,
+    clean_display_name=None,
+    expected_sentence_id=None,
+):
     global MUSIC_CACHE
     try:
+        if (
+            expected_sentence_id is not None
+            and conn.sentence_id != expected_sentence_id
+        ):
+            conn.logger.bind(tag=TAG).warning(
+                "Ход диалога сменился, пока готовился трек — воспроизведение отменено"
+            )
+            return
+
         if not os.path.exists(MUSIC_CACHE["music_dir"]):
             conn.logger.bind(tag=TAG).error("Директория с музыкой отсутствует")
             return
@@ -303,10 +346,17 @@ async def play_local_music(conn: "ConnectionHandler", specific_file=None, clean_
 @register_function("play_music", play_music_function_desc, ToolType.SYSTEM_CTL)
 def play_music(conn: "ConnectionHandler", song_name: str):
     try:
-        # Submit async task
+        # Запускаем асинхронную задачу и регистрируем её как "ожидаемую" для
+        # текущего хода диалога: chat() дождётся её завершения (см.
+        # register_pending_tool_task/_await_pending_tool_tasks в connection.py)
+        # перед тем, как отправить SentenceType.LAST. Раньше задача была чисто
+        # fire-and-forget, из-за чего LAST мог попасть в очередь TTS раньше
+        # реального аудио песни (гонка) или уже после смены хода диалога
+        # (трек тихо терялся).
         task = conn.loop.create_task(
             handle_music_command(conn, song_name)
         )
+        conn.register_pending_tool_task(task)
 
         def handle_done(f):
             try:

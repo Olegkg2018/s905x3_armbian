@@ -195,6 +195,42 @@ class ConnectionHandler:
         # 标记当前是否为来电接听模式
         self.incoming_call = None
 
+        # 后台工具任务（例如异步下载音乐），在结束当前对话轮次前需要等待完成，
+        # 避免 SentenceType.LAST 提前发出导致后续音频被丢弃或顺序错乱
+        self.pending_tool_tasks = set()
+
+    def register_pending_tool_task(self, task):
+        """注册一个需要在当前对话轮次结束前等待完成的后台任务"""
+        self.pending_tool_tasks.add(task)
+
+        def _done(t):
+            self.pending_tool_tasks.discard(t)
+
+        task.add_done_callback(_done)
+
+    def _await_pending_tool_tasks(self, timeout=None):
+        """在发送 SentenceType.LAST 之前，同步等待所有已注册的后台工具任务完成。
+        必须从 executor 线程（非事件循环线程）调用，避免死锁。
+        """
+        if not self.pending_tool_tasks:
+            return
+        tasks = list(self.pending_tool_tasks)
+        if timeout is None:
+            timeout = int(self.config.get("tool_call_timeout", 30))
+
+        async def _wait_all():
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+        try:
+            asyncio.run_coroutine_threadsafe(_wait_all(), self.loop).result(
+                timeout=timeout
+            )
+        except Exception as e:
+            self.logger.bind(tag=TAG).warning(
+                f"Фоновая задача инструмента не завершилась за {timeout}с, "
+                f"продолжаем без ожидания: {e}"
+            )
+
     async def handle_connection(self, ws: websockets.ServerConnection):
         try:
             # 获取运行中的事件循环（必须在异步上下文中）
@@ -1239,6 +1275,9 @@ class ConnectionHandler:
             self.dialogue.put(Message(role="assistant", content=text_buff))
 
         if depth == 0:
+            # 等待本轮工具调用中注册的后台任务（如音乐搜索/下载）完成，
+            # 否则 LAST 哨兵可能先于实际音频内容进入队列，导致内容被跳过或丢弃
+            self._await_pending_tool_tasks()
             self.tts.tts_text_queue.put(
                 TTSMessageDTO(
                     sentence_id=current_sentence_id,
