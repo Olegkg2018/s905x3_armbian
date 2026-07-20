@@ -1,0 +1,41 @@
+addr = "0.0.0.0:8080"
+hello_wav = "/config/hello.wav"
+
+[tts]
+platform = "openai"
+# "supertonic" — имя сервиса в docker-compose.yml, а не 127.0.0.1:
+# контейнеры общаются друг с другом по именам сервисов внутри сети compose
+url = "http://supertonic:7788/v1/audio/speech"
+model = "supertonic-3"
+api_key = "local"
+voice = "F1"
+
+[asr]
+platform = "openai"
+url = "https://api.groq.com/openai/v1/audio/transcriptions"
+api_key = "ВАШ_GROQ_API_KEY"
+model = "whisper-large-v3"
+lang = "ru"
+prompt = "Привет\nАлиса\n(шум)\n(музыка)\n(тишина)\n"
+
+[llm]
+platform = "openai_chat"
+url = "https://api.deepseek.com/v1/chat/completions"
+api_key = "ВАШ_DEEPSEEK_API_KEY"
+model = "deepseek-chat"
+history = 10
+
+# Раскомментируйте и укажите адрес MCP-сервера, когда перенесём
+# play_music/get_news_ru на MCP (следующий шаг)
+# [[llm.mcp_server]]
+# server = "http://mcp-tools:8000/mcp"
+# type = "http_streamable"
+# call_mcp_message = "Секунду, сейчас узнаю..."
+
+[[llm.sys_prompts]]
+role = "system"
+content = """
+Ты — Алиса, умный голосовой помощник, встроенный в умную колонку. Твой характер: дружелюбный, вежливый, но живой и с легким чувством юмора.
+Общайся только на русском языке. Твои ответы будут озвучиваться голосом, поэтому пиши КРАТКО, ЕМКО и ЕСТЕСТВЕННО, как в живом диалоге.
+Не используй markdown-разметку, списки, таблицы — только обычный текст с правильными знаками препинания.
+"""

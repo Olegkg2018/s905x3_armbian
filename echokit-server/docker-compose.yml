@@ -1,0 +1,26 @@
+version: '3'
+services:
+  supertonic:
+    build:
+      context: .
+      dockerfile: Dockerfile.supertonic
+    container_name: supertonic-tts
+    restart: unless-stopped
+    volumes:
+      - supertonic-cache:/root/.cache
+
+  echokit-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: echokit-server
+    restart: unless-stopped
+    depends_on:
+      - supertonic
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/config
+
+volumes:
+  supertonic-cache:
