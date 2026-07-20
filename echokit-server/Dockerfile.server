@@ -1,0 +1,55 @@
+# Собирается нативно под архитектуру хоста — на S905x3 (aarch64) даст
+# aarch64-бинарник, кросс-компиляция не нужна: docker build сам подхватит
+# нужный toolchain через официальный образ rust.
+#
+# Проверено вручную (см. отчёт в чате): те же build/runtime зависимости
+# (pkg-config, libssl-dev, libopus-dev на этапе сборки; libssl3, libopus0
+# на этапе запуска) были нужны при нативной сборке на x86_64 в песочнице.
+# Сама сборка образа на ARM здесь не тестировалась — нет Docker/root в
+# песочнице — стоит проверить как есть на реальном устройстве.
+
+FROM rust:bookworm AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pkg-config \
+    libssl-dev \
+    libopus-dev \
+    cmake \
+    protobuf-compiler \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# В репозитории нет git-тегов (версия 0.3.2 — только строка в Cargo.toml),
+# поэтому пин делаем на конкретный коммит, а не на branch/tag — так сборка
+# воспроизводима. Это ровно тот коммит, что был проверен в тесте.
+# Поднять версию можно осознанно, поменяв ARG при следующей пересборке.
+ARG ECHOKIT_SERVER_REF=d1d976596f122976095b7da4df3e946baf152b96
+WORKDIR /build
+RUN git init . \
+    && git remote add origin https://github.com/second-state/echokit_server.git \
+    && git fetch --depth 1 origin ${ECHOKIT_SERVER_REF} \
+    && git checkout FETCH_HEAD
+
+# Сборка может занять заметно больше времени на слабом ARM SBC, чем на
+# десктопе/сервере — это одноразовые затраты, слой закешируется.
+RUN cargo build --release
+
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libssl3 \
+    libopus0 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=builder /build/target/release/echokit_server /app/echokit_server
+
+# config.toml и hello.wav монтируются volume'ом (см. docker-compose.yml),
+# чтобы менять голос/промпт/ключи без пересборки образа
+EXPOSE 8080
+
+ENV RUST_LOG=info
+ENTRYPOINT ["/app/echokit_server"]
+CMD ["/config/config.toml"]

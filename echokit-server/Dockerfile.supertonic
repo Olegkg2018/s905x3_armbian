@@ -1,0 +1,22 @@
+# onnxruntime публикует готовые manylinux aarch64-колёса на PyPI, так что
+# pip install не должен пересобирать его из исходников на слабом ARM —
+# но это стоит перепроверить на самом S905x3 (если колеса под вашу связку
+# glibc/Python не найдётся, pip уйдёт в сборку из исходников, а это будет
+# очень медленно на quad-core A55).
+
+FROM python:3.11-slim-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libsndfile1 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir "supertonic[serve]"
+
+# Модель качается с HuggingFace при первом обращении и кешируется в
+# /root/.cache — том ниже нужен, чтобы не перекачивать её при каждом
+# пересоздании контейнера
+VOLUME ["/root/.cache"]
+
+EXPOSE 7788
+ENTRYPOINT ["supertonic", "serve", "--host", "0.0.0.0", "--port", "7788"]
