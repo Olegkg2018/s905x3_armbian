@@ -1,0 +1,1036 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_home74",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "sections",
+          "title": "Главная",
+          "path": "main",
+          "icon": "mdi:view-dashboard",
+          "max_columns": 4,
+          "sections": [
+            {
+              "type": "grid",
+              "column_span": 4,
+              "cards": [
+                {
+                  "type": "custom:mushroom-title-card",
+                  "alignment": "center",
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": 2
+                  },
+                  "title": "Дом · Кривой Рог",
+                  "subtitle": "{% set v=states('sensor.grid_voltage_effective')|float(0) %}{% set s=states('sensor.jk_bms2_jk_bms2_state_of_charge')|float(0)|round(0)|int %}{{ now().strftime('%d.%m.%Y') }} · {{ 'сеть есть, '~(v|round(0)|int)~' В' if v>100 else 'СЕТИ НЕТ' }} · батарея {{ s }}% · {{ 'автомат вкл' if is_state('switch.ji_liang_duan_lu_qi_switch','on') else 'автомат выкл' }} · режим отключений {{ 'вкл' if is_state('input_boolean.avtomat_vkh_rezhim_otkl','on') else 'выкл' }}",
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:none!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;}.title{background:linear-gradient(90deg,#4fc3f7,#b388ff,#ff80ab,#4fc3f7);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;font-size:30px;font-weight:700;letter-spacing:.5px;}.subtitle{opacity:.85;font-size:13px;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.00s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.00s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}@keyframes h74shift{0%{background-position:0% 50%}100%{background-position:200% 50%}}.title{animation:h74shift 8s linear infinite;}"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "sensor.grid_voltage_effective",
+                  "layout": "vertical",
+                  "primary": "{{ states('sensor.grid_voltage_effective')|float(0)|round(0)|int }} В",
+                  "secondary": "Сеть",
+                  "icon": "mdi:sine-wave",
+                  "icon_color": "{% set v=states('sensor.grid_voltage_effective')|float(0) %}{{ 'red' if v<100 else 'orange' if v<190 else 'green' }}",
+                  "tap_action": {
+                    "action": "more-info",
+                    "entity": "sensor.grid_voltage_effective"
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "sensor.grid_voltage_effective"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.06s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.06s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74blink .8s infinite' if states('sensor.grid_voltage_effective')|float(0)<100 else 'h74flicker 2.2s infinite' if states('sensor.grid_voltage_effective')|float(0)<190 else 'h74pulse 4.5s ease-in-out infinite') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "switch.ji_liang_duan_lu_qi_switch",
+                  "layout": "vertical",
+                  "primary": "{{ 'Вкл' if is_state('switch.ji_liang_duan_lu_qi_switch','on') else 'Выкл' if is_state('switch.ji_liang_duan_lu_qi_switch','off') else 'Нет связи' }}",
+                  "secondary": "Автомат вх",
+                  "icon": "mdi:electric-switch",
+                  "icon_color": "{{ 'green' if is_state('switch.ji_liang_duan_lu_qi_switch','on') else 'red' if is_state('switch.ji_liang_duan_lu_qi_switch','off') else 'grey' }}",
+                  "tap_action": {
+                    "action": "toggle",
+                    "confirmation": {
+                      "text": "Переключить автомат вх (питание инвертора)?"
+                    }
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "switch.ji_liang_duan_lu_qi_switch"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.12s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.12s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74pulse 3s ease-in-out infinite' if is_state('switch.ji_liang_duan_lu_qi_switch','on') else 'h74blink 1s infinite' if is_state('switch.ji_liang_duan_lu_qi_switch','off') else '') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "sensor.jk_bms2_jk_bms2_state_of_charge",
+                  "layout": "vertical",
+                  "primary": "{{ states('sensor.jk_bms2_jk_bms2_state_of_charge')|float(0)|round(0)|int }}%",
+                  "secondary": "Батарея",
+                  "icon": "{% set s=states('sensor.jk_bms2_jk_bms2_state_of_charge')|float(0) %}{{ 'mdi:battery-alert' if s<20 else 'mdi:battery-60' if s<60 else 'mdi:battery-high' if s<95 else 'mdi:battery' }}",
+                  "icon_color": "{% set s=states('sensor.jk_bms2_jk_bms2_state_of_charge')|float(0) %}{{ 'red' if s<30 else 'orange' if s<60 else 'green' }}",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/dashboard-home74/energy"
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "sensor.jk_bms2_jk_bms2_state_of_charge"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.18s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.18s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74blink 1s infinite' if states('sensor.jk_bms2_jk_bms2_state_of_charge')|float(100)<30 else 'h74pulse 1.7s ease-in-out infinite' if states('sensor.jk_bms2_jk_bms2_power')|float(0)>5 else '') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "sensor.inverter_pv_input_power",
+                  "layout": "vertical",
+                  "primary": "{{ states('sensor.inverter_pv_input_power')|float(0)|round(0)|int }} Вт",
+                  "secondary": "Панели",
+                  "icon": "mdi:solar-power",
+                  "icon_color": "{{ 'amber' if states('sensor.inverter_pv_input_power')|float(0)>100 else 'grey' }}",
+                  "tap_action": {
+                    "action": "more-info",
+                    "entity": "sensor.inverter_pv_input_power"
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "sensor.inverter_pv_input_power"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.24s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.24s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74pulse 2.5s ease-in-out infinite' if states('sensor.inverter_pv_input_power')|float(0)>100 else '') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "sensor.inverter_output_active_power",
+                  "layout": "vertical",
+                  "primary": "{{ states('sensor.inverter_output_active_power')|float(0)|round(0)|int }} Вт",
+                  "secondary": "Нагрузка",
+                  "icon": "mdi:home-lightning-bolt",
+                  "icon_color": "blue",
+                  "tap_action": {
+                    "action": "more-info",
+                    "entity": "sensor.inverter_output_active_power"
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "sensor.inverter_output_active_power"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.30s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.30s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74pulse 1s ease-in-out infinite' if states('sensor.inverter_output_active_power')|float(0)>2000 else 'h74pulse 3.2s ease-in-out infinite') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "sensor.grid_power_clamps",
+                  "layout": "vertical",
+                  "primary": "{{ (states('sensor.grid_power_clamps')|float(0)/1000)|round(2) }} кВт",
+                  "secondary": "Из сети",
+                  "icon": "mdi:transmission-tower",
+                  "icon_color": "{% set p=states('sensor.grid_power_clamps')|float(0) %}{{ 'red' if p>5000 else 'orange' if p>3000 else 'cyan' }}",
+                  "tap_action": {
+                    "action": "more-info",
+                    "entity": "sensor.grid_power_clamps"
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "sensor.grid_power_clamps"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.36s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.36s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74blink .6s infinite' if states('sensor.grid_power_clamps')|float(0)>5000 else 'h74pulse 1.2s ease-in-out infinite' if states('sensor.grid_power_clamps')|float(0)>3000 else '') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "light.hobeian_zg_301z",
+                  "layout": "vertical",
+                  "primary": "{{ 'Вкл' if is_state('light.hobeian_zg_301z','on') else 'Выкл' }}",
+                  "secondary": "Бойлер",
+                  "icon": "mdi:water-boiler",
+                  "icon_color": "{{ 'orange' if is_state('light.hobeian_zg_301z','on') else 'grey' }}",
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "light.hobeian_zg_301z"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.42s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.42s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74pulse 2s ease-in-out infinite' if is_state('light.hobeian_zg_301z','on') else '') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "binary_sensor.outage_soon",
+                  "layout": "vertical",
+                  "primary": "{{ 'Нет' if states('sensor.grid_voltage_effective')|float(0)<100 else 'Скоро' if is_state('binary_sensor.outage_soon','on') else 'Есть' }}",
+                  "secondary": "{% set oa = states('binary_sensor.dtek_account_ACCOUNT_ID_outage_active') %}{% set dr = states('sensor.dtek_account_ACCOUNT_ID_restore_time') %}{% if oa == 'on' and dr not in ['unknown','unavailable','none',''] and as_datetime(dr) > now() %}Вернётся в {{ as_local(as_datetime(dr)).strftime('%H:%M') }} (ДТЭК){% else %}{% set o=states('sensor.yasno_dnipro_dnem_2_2_next_planned_outage') %}{% if o not in ['unknown','unavailable','none',''] %}{% set dt=(as_datetime(o)-now()).total_seconds() %}{% if dt>0 %}через {{ (dt//3600)|int }} ч {{ ((dt%3600)//60)|int }} м{% else %}идёт откл.{% endif %}{% else %}Свет · без откл.{% endif %}{% endif %}",
+                  "icon": "{{ 'mdi:flash-alert' if is_state('binary_sensor.outage_soon','on') or states('sensor.grid_voltage_effective')|float(0)<100 else 'mdi:transmission-tower' }}",
+                  "icon_color": "{{ 'red' if is_state('binary_sensor.outage_soon','on') or states('sensor.grid_voltage_effective')|float(0)<100 else 'green' }}",
+                  "tap_action": {
+                    "action": "more-info",
+                    "entity": "binary_sensor.outage_soon"
+                  },
+                  "hold_action": {
+                    "action": "more-info",
+                    "entity": "binary_sensor.outage_soon"
+                  },
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  },
+                  "card_mod": {
+                    "style": {
+                      ".": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-primary-font-size:19px;--card-secondary-font-size:11px;--card-primary-line-height:1.1;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.48s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.48s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}",
+                      "mushroom-state-item$": {
+                        "mushroom-shape-icon$": "{% set a = ('h74blink .5s infinite' if states('sensor.grid_voltage_effective')|float(0)<100 else 'h74blink .7s infinite' if is_state('binary_sensor.outage_soon','on') else 'h74pulse 5s ease-in-out infinite') %}.shape{ {% if a %}animation:{{ a }};{% endif %} }@keyframes h74pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.12);filter:drop-shadow(0 0 9px currentColor)}}@keyframes h74blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes h74flicker{0%,100%{opacity:1}8%{opacity:.4}12%{opacity:1}40%{opacity:.8}44%{opacity:.3}48%{opacity:1}}@media (prefers-reduced-motion:reduce){.shape{animation:none!important}}"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 2,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Свет",
+                  "heading_style": "title",
+                  "icon": "mdi:transmission-tower"
+                },
+                {
+                  "type": "custom:mushroom-template-card",
+                  "entity": "sensor.yasno_dnipro_dnem_2_2_electricity",
+                  "primary": "{{ 'Свет есть' if is_state('sensor.yasno_dnipro_dnem_2_2_electricity','вкл') else 'Света нет по графику' }}",
+                  "secondary": "{% set oa = states('binary_sensor.dtek_account_ACCOUNT_ID_outage_active') %}{% set dr = states('sensor.dtek_account_ACCOUNT_ID_restore_time') %}{% if oa == 'on' and dr not in ['unknown','unavailable','none',''] and as_datetime(dr) > now() %}Свет вернётся в {{ as_local(as_datetime(dr)).strftime('%H:%M') }} (по данным ДТЭК){% else %}{% set o=states('sensor.yasno_dnipro_dnem_2_2_next_planned_outage') %}{% set c=states('sensor.yasno_dnipro_dnem_2_2_next_connectivity') %}{% if o not in ['unknown','unavailable','none',''] %}{% set d=(as_datetime(o)-now()).total_seconds() %}{% if d>0 %}Отключение через {{ (d//3600)|int }} ч {{ ((d%3600)//60)|int }} мин ({{ as_local(as_datetime(o)).strftime('%H:%M') }}){% if c not in ['unknown','unavailable','none',''] %} · включение {{ as_local(as_datetime(c)).strftime('%H:%M') }}{% endif %}{% else %}Отключение идёт{% if c not in ['unknown','unavailable','none',''] %} до {{ as_local(as_datetime(c)).strftime('%H:%M') }}{% endif %}{% endif %}{% else %}Плановых отключений не ожидается{% endif %}{% endif %}",
+                  "icon": "{{ 'mdi:transmission-tower' if is_state('binary_sensor.outage_soon','off') else 'mdi:flash-alert' }}",
+                  "icon_color": "{{ 'green' if is_state('binary_sensor.outage_soon','off') else 'red' }}",
+                  "badge_icon": "{{ 'mdi:alert' if is_state('binary_sensor.outage_soon','on') else '' }}",
+                  "badge_color": "red",
+                  "fill_container": true,
+                  "layout": "horizontal",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-mod-icon-color:inherit;} @keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(255,60,60,0)}50%{box-shadow:0 0 30px rgba(255,60,60,.8)}}:host([data-outage]) ha-card{animation:pulse 1.6s infinite;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.54s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.54s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": 2
+                  }
+                },
+                {
+                  "type": "iframe",
+                  "url": "/local/dtek-schedule.html?v=5",
+                  "aspect_ratio": "40%",
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{--card-mod-icon-color:inherit;} @keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(255,60,60,0)}50%{box-shadow:0 0 30px rgba(255,60,60,.8)}}:host([data-outage]) ha-card{animation:pulse 1.6s infinite;}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.54s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.54s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "binary_sensor.outage_soon",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "markdown",
+                    "content": "### ⚠️ Скоро плановое отключение света\nАвтомат вх держится включённым — батарея заряжается от сети. Заряд: **{{ states('sensor.jk_bms2_jk_bms2_state_of_charge') }}%**.",
+                    "card_mod": {
+                      "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{border-color:rgba(255,80,80,.6);animation:neonr 1.8s ease-in-out infinite;}@keyframes neonr{0%,100%{box-shadow:0 0 8px #ff505033}50%{box-shadow:0 0 28px #ff5050aa}}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.60s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.60s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                    }
+                  },
+                  "grid_options": {
+                    "columns": "full"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 2,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Погода",
+                  "heading_style": "title",
+                  "icon": "mdi:weather-partly-cloudy"
+                },
+                {
+                  "type": "custom:clock-weather-card",
+                  "entity": "weather.krivoi_rog",
+                  "sun_entity": "sun.sun",
+                  "weather_icon_type": "fill",
+                  "animated_icon": true,
+                  "forecast_rows": 5,
+                  "locale": "ru",
+                  "time_format": "24",
+                  "date_pattern": "cccc, d MMMM",
+                  "show_humidity": true,
+                  "hide_today_section": false,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.78s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.78s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  }
+                },
+                {
+                  "type": "history-graph",
+                  "title": "Напряжение сети за 24 часа",
+                  "hours_to_show": 24,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.72s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.72s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.grid_voltage_effective",
+                      "name": "Сеть (автомат)"
+                    }
+                  ],
+                  "grid_options": {
+                    "columns": "full"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 1,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Батарея",
+                  "heading_style": "title",
+                  "icon": "mdi:battery-charging-high"
+                },
+                {
+                  "type": "gauge",
+                  "entity": "sensor.jk_bms2_jk_bms2_state_of_charge",
+                  "name": "Заряд батареи",
+                  "min": 0,
+                  "max": 100,
+                  "needle": true,
+                  "severity": {
+                    "red": 0,
+                    "yellow": 35,
+                    "green": 65
+                  },
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{animation:neon 3.2s ease-in-out infinite;}@keyframes neon{0%,100%{box-shadow:0 0 6px 3ddc8433,0 10px 34px rgba(0,0,0,.38)}50%{box-shadow:0 0 26px 3ddc8499,0 10px 34px rgba(0,0,0,.38)}}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.84s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.84s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "unit": "%"
+                },
+                {
+                  "type": "entities",
+                  "title": "Батарея JK-BMS",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.90s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.90s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_total_voltage",
+                      "name": "Напряжение"
+                    },
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_current",
+                      "name": "Ток"
+                    },
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_power",
+                      "name": "Мощность (−разряд)"
+                    },
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_capacity_remaining",
+                      "name": "Остаток ёмкости"
+                    },
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_power_tube_temperature",
+                      "name": "Температура"
+                    },
+                    {
+                      "entity": "sensor.batareia_zariadzheno_sogodni",
+                      "name": "Заряд сегодня"
+                    },
+                    {
+                      "entity": "sensor.batareia_rozriadzheno_sogodni",
+                      "name": "Разряд сегодня"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 1,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Сеть",
+                  "heading_style": "title",
+                  "icon": "mdi:transmission-tower"
+                },
+                {
+                  "type": "gauge",
+                  "entity": "sensor.grid_power_clamps",
+                  "name": "Из сети (лимит 5 кВт)",
+                  "min": 0,
+                  "max": 6000,
+                  "needle": true,
+                  "severity": {
+                    "green": 0,
+                    "yellow": 3000,
+                    "red": 5000
+                  },
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{animation:neon 3.2s ease-in-out infinite;}@keyframes neon{0%,100%{box-shadow:0 0 6px 4fc3f733,0 10px 34px rgba(0,0,0,.38)}50%{box-shadow:0 0 26px 4fc3f799,0 10px 34px rgba(0,0,0,.38)}}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:0.96s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:2.96s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "unit": "Вт"
+                },
+                {
+                  "type": "entities",
+                  "title": "Автомат и сеть",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.02s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.02s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.ji_liang_duan_lu_qi_voltage",
+                      "name": "Напряжение сети"
+                    },
+                    {
+                      "entity": "sensor.ji_liang_duan_lu_qi_power",
+                      "name": "Мощность на инвертор"
+                    },
+                    {
+                      "entity": "sensor.ji_liang_duan_lu_qi_current",
+                      "name": "Ток"
+                    },
+                    {
+                      "entity": "sensor.avtomat_vkh_srabotavshaia_zashchita",
+                      "name": "Защита автомата"
+                    },
+                    {
+                      "entity": "sensor.avtomat_vkh_lt_temperatura",
+                      "name": "Температура автомата"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 1,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Солнце",
+                  "heading_style": "title",
+                  "icon": "mdi:white-balance-sunny"
+                },
+                {
+                  "type": "gauge",
+                  "entity": "sensor.inverter_pv_input_power",
+                  "name": "Панели",
+                  "min": 0,
+                  "max": 3000,
+                  "needle": true,
+                  "severity": {
+                    "red": 0,
+                    "yellow": 300,
+                    "green": 800
+                  },
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{animation:neon 3.2s ease-in-out infinite;}@keyframes neon{0%,100%{box-shadow:0 0 6px ffc10733,0 10px 34px rgba(0,0,0,.38)}50%{box-shadow:0 0 26px ffc10799,0 10px 34px rgba(0,0,0,.38)}}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.08s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.08s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "unit": "Вт"
+                },
+                {
+                  "type": "entities",
+                  "title": "Сегодня",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.14s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.14s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.solar_pv_today_soniachna_energiia_sogodni",
+                      "name": "Выработка панелей"
+                    },
+                    {
+                      "entity": "sensor.energy_production_today",
+                      "name": "Прогноз выработки сегодня"
+                    },
+                    {
+                      "entity": "sensor.energy_production_tomorrow",
+                      "name": "Прогноз на завтра"
+                    },
+                    {
+                      "entity": "sensor.pokupka_iz_seti_segodnia",
+                      "name": "Куплено из сети"
+                    },
+                    {
+                      "entity": "sensor.batareia_zariadzheno_sogodni",
+                      "name": "Заряд батареи"
+                    },
+                    {
+                      "entity": "sensor.batareia_rozriadzheno_sogodni",
+                      "name": "Разряд батареи"
+                    },
+                    {
+                      "entity": "sensor.energy_production_today_remaining",
+                      "name": "Ещё сегодня (прогноз)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 1,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Дом",
+                  "heading_style": "title",
+                  "icon": "mdi:home"
+                },
+                {
+                  "type": "gauge",
+                  "entity": "sensor.inverter_load_percent",
+                  "name": "Нагрузка инвертора",
+                  "min": 0,
+                  "max": 100,
+                  "needle": true,
+                  "severity": {
+                    "green": 0,
+                    "yellow": 60,
+                    "red": 85
+                  },
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}ha-card{animation:neon 3.2s ease-in-out infinite;}@keyframes neon{0%,100%{box-shadow:0 0 6px 7c4dff33,0 10px 34px rgba(0,0,0,.38)}50%{box-shadow:0 0 26px 7c4dff99,0 10px 34px rgba(0,0,0,.38)}}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.20s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.20s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "unit": "%"
+                },
+                {
+                  "type": "entities",
+                  "title": "Дом и вода",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.26s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.26s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "switch.pump",
+                      "name": "Насос"
+                    },
+                    {
+                      "entity": "sensor.pump_tekushchee_davlenie",
+                      "name": "Давление, бар"
+                    },
+                    {
+                      "entity": "sensor.teplitsa_temperatura",
+                      "name": "Теплица"
+                    },
+                    {
+                      "entity": "sensor.temp1_vlazhnost",
+                      "name": "Влажность"
+                    },
+                    {
+                      "entity": "sensor.inverter_temperature",
+                      "name": "Температура инвертора"
+                    },
+                    {
+                      "entity": "sensor.atorch2_moshchnost",
+                      "name": "Atorch2, Вт"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 2,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "История",
+                  "heading_style": "title",
+                  "icon": "mdi:chart-line"
+                },
+                {
+                  "type": "history-graph",
+                  "title": "Мощности за 12 часов",
+                  "hours_to_show": 12,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.32s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.32s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.inverter_pv_input_power",
+                      "name": "Панели"
+                    },
+                    {
+                      "entity": "sensor.inverter_output_active_power",
+                      "name": "Нагрузка"
+                    },
+                    {
+                      "entity": "sensor.grid_power_clamps",
+                      "name": "Из сети"
+                    },
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_power",
+                      "name": "Батарея"
+                    }
+                  ]
+                },
+                {
+                  "type": "history-graph",
+                  "title": "Заряд батареи за 24 часа",
+                  "hours_to_show": 24,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.38s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.38s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_state_of_charge",
+                      "name": "SOC"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 2,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Автоматика",
+                  "heading_style": "title",
+                  "icon": "mdi:robot"
+                },
+                {
+                  "type": "entities",
+                  "title": "Режимы автоматики",
+                  "show_header_toggle": false,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "input_boolean.boiler2_vkl",
+                      "name": "Бойлер: автоматика"
+                    },
+                    {
+                      "entity": "input_boolean.avtomat_vkh_rezhim_otkl",
+                      "name": "Режим отключений (автомат всегда включён)"
+                    },
+                    {
+                      "entity": "input_boolean.avtomat_vkh_avtovkl",
+                      "name": "Автовключение после самопроизвольного откл."
+                    },
+                    {
+                      "entity": "input_boolean.avtomat_vkh_avtootkl_posle_otkl",
+                      "name": "Автоотключение после света"
+                    },
+                    {
+                      "entity": "input_boolean.avtomat_vkh_otkl_po_limitu",
+                      "name": "Отключён по лимиту 5 кВт",
+                      "icon": "mdi:flash-triangle"
+                    }
+                  ]
+                },
+                {
+                  "type": "statistics-graph",
+                  "title": "Выработка и покупка (14 дней)",
+                  "chart_type": "bar",
+                  "period": "day",
+                  "days_to_show": 14,
+                  "stat_types": [
+                    "change"
+                  ],
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    "sensor.solar_pv_today_soniachna_energiia_sogodni",
+                    "sensor.pokupka_iz_seti_segodnia"
+                  ]
+                }
+              ]
+            }
+          ],
+          "background": {
+            "image": "/local/home74-bg.svg",
+            "size": "cover",
+            "alignment": "center",
+            "repeat": "no-repeat",
+            "attachment": "fixed",
+            "opacity": 100
+          }
+        },
+        {
+          "type": "sections",
+          "title": "Энергия",
+          "path": "energy",
+          "icon": "mdi:lightning-bolt-circle",
+          "max_columns": 4,
+          "sections": [
+            {
+              "type": "grid",
+              "column_span": 2,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Статистика",
+                  "heading_style": "title",
+                  "icon": "mdi:chart-bar"
+                },
+                {
+                  "type": "statistics-graph",
+                  "title": "Выработка и покупка (14 дней)",
+                  "chart_type": "bar",
+                  "period": "day",
+                  "days_to_show": 14,
+                  "stat_types": [
+                    "change"
+                  ],
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    "sensor.solar_pv_today_soniachna_energiia_sogodni",
+                    "sensor.pokupka_iz_seti_segodnia"
+                  ]
+                },
+                {
+                  "type": "history-graph",
+                  "title": "Мощности за 12 часов",
+                  "hours_to_show": 12,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.inverter_pv_input_power",
+                      "name": "Панели"
+                    },
+                    {
+                      "entity": "sensor.inverter_output_active_power",
+                      "name": "Нагрузка"
+                    },
+                    {
+                      "entity": "sensor.grid_power_clamps",
+                      "name": "Из сети"
+                    },
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_power",
+                      "name": "Батарея"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 2,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Батарея по ячейкам",
+                  "heading_style": "title",
+                  "icon": "mdi:battery"
+                },
+                {
+                  "type": "custom:bms-battery-cells-card",
+                  "title": "",
+                  "cells": [
+                    {
+                      "name": "1",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_1",
+                      "balance_entity": "sensor.jk_bms2_jk_bms2_cell_resistance_1"
+                    },
+                    {
+                      "name": "2",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_2",
+                      "balance_entity": "sensor.jk_bms2_jk_bms2_cell_resistance_2"
+                    },
+                    {
+                      "name": "3",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_3",
+                      "balance_entity": "sensor.jk_bms2_jk_bms2_cell_resistance_3"
+                    },
+                    {
+                      "name": "4",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_4",
+                      "balance_entity": ""
+                    },
+                    {
+                      "name": "5",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_5",
+                      "balance_entity": ""
+                    },
+                    {
+                      "name": "6",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_6",
+                      "balance_entity": ""
+                    },
+                    {
+                      "name": "7",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_7",
+                      "balance_entity": ""
+                    },
+                    {
+                      "name": "8",
+                      "entity": "sensor.jk_bms2_jk_bms2_cell_voltage_8",
+                      "balance_entity": ""
+                    }
+                  ],
+                  "soc_entity": "sensor.jk_bms2_jk_bms2_state_of_charge",
+                  "watt_entity": "sensor.jk_bms2_jk_bms2_power",
+                  "total_voltage_entity": "sensor.jk_bms2_jk_bms2_total_voltage",
+                  "total_current_entity": "sensor.jk_bms2_jk_bms2_current",
+                  "temp_entity": "sensor.jk_bms2_jk_bms2_temperature_sensor_1",
+                  "show_values": true,
+                  "show_voltage_diff": true,
+                  "show_average": true,
+                  "thicker_borders": false,
+                  "horizontal_layout": true,
+                  "hide_bars": false,
+                  "show_as_table": true,
+                  "show_values_on_top": true,
+                  "show_detailed_view": true,
+                  "show_cell_list": true,
+                  "show_standard_in_detail": false,
+                  "stat_charge_entity": "switch.jk_bms2_jk_bms2_charging",
+                  "stat_discharge_entity": "switch.jk_bms2_jk_bms2_discharging",
+                  "stat_balance_entity": "switch.jk_bms2_jk_bms2_balancer",
+                  "capacity_entity": "sensor.jk_bms2_jk_bms2_capacity_remaining",
+                  "cycle_capacity_entity": "sensor.jk_bms2_jk_bms2_charging_cycles",
+                  "cycle_count_entity": "sensor.jk_bms2_jk_bms2_total_charging_cycle_capacity",
+                  "temp_mos_entity": "sensor.jk_bms2_jk_bms2_temperature_sensor_1",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  }
+                },
+                {
+                  "type": "history-graph",
+                  "title": "Заряд батареи за 24 часа",
+                  "hours_to_show": 24,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.jk_bms2_jk_bms2_state_of_charge",
+                      "name": "SOC"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "background": {
+            "image": "/local/home74-bg.svg",
+            "size": "cover",
+            "alignment": "center",
+            "repeat": "no-repeat",
+            "attachment": "fixed",
+            "opacity": 100
+          }
+        },
+        {
+          "type": "sections",
+          "title": "Погода",
+          "path": "weather",
+          "icon": "mdi:weather-cloudy",
+          "max_columns": 3,
+          "sections": [
+            {
+              "type": "grid",
+              "column_span": 2,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Кривой Рог",
+                  "heading_style": "title",
+                  "icon": "mdi:weather-partly-cloudy"
+                },
+                {
+                  "name": "",
+                  "height": null,
+                  "show_feels_like": true,
+                  "show_wind": true,
+                  "show_wind_gust": true,
+                  "show_wind_direction": true,
+                  "show_humidity": true,
+                  "show_min_temp": true,
+                  "show_hourly_forecast": true,
+                  "hourly_forecast_hours": 5,
+                  "show_daily_forecast": true,
+                  "daily_forecast_days": 7,
+                  "show_sunrise_sunset": true,
+                  "show_clock": false,
+                  "clock_position": "top",
+                  "clock_format": "24h",
+                  "overlay_opacity": 0.7,
+                  "language": "auto",
+                  "wind_speed_unit": "ms",
+                  "sunrise_entity": "sensor.home_assistant_solntse_rising",
+                  "sunset_entity": "sensor.home_assistant_solntse_setting",
+                  "type": "custom:dynamic-weather-card",
+                  "entity": "weather.krivoi_rog",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  }
+                },
+                {
+                  "type": "custom:clock-weather-card",
+                  "entity": "weather.krivoi_rog",
+                  "sun_entity": "sun.sun",
+                  "weather_icon_type": "fill",
+                  "animated_icon": true,
+                  "forecast_rows": 5,
+                  "locale": "ru",
+                  "time_format": "24",
+                  "date_pattern": "cccc, d MMMM",
+                  "show_humidity": true,
+                  "hide_today_section": false,
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "column_span": 1,
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Датчики",
+                  "heading_style": "title",
+                  "icon": "mdi:thermometer"
+                },
+                {
+                  "type": "entities",
+                  "card_mod": {
+                    "style": "ha-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:22px;box-shadow:0 10px 34px rgba(0,0,0,.38);transition:transform .25s,box-shadow .25s;}ha-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5);}:host{animation:h74up .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:1.40s;}@keyframes h74up{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}ha-card{position:relative;overflow:hidden;}ha-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-130%);animation:h74sweep 11s ease-in-out infinite;animation-delay:3.40s;}@keyframes h74sweep{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}@media (prefers-reduced-motion:reduce){:host,ha-card::after{animation:none!important}}"
+                  },
+                  "entities": [
+                    {
+                      "entity": "sensor.teplitsa_temperatura"
+                    },
+                    {
+                      "entity": "sensor.temp1_vlazhnost"
+                    },
+                    {
+                      "entity": "sensor.zbeacon_th01_temperatura_2"
+                    },
+                    {
+                      "entity": "sensor.zbeacon_th01_vlazhnost_2"
+                    },
+                    {
+                      "entity": "sensor.narodmon_temperature"
+                    },
+                    {
+                      "entity": "sensor.temperatura_krivoi_rog_gismeteo"
+                    },
+                    {
+                      "entity": "sensor.davlenie_krivoi_rog_gismeteo"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "background": {
+            "image": "/local/home74-bg.svg",
+            "size": "cover",
+            "alignment": "center",
+            "repeat": "no-repeat",
+            "attachment": "fixed",
+            "opacity": 100
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+services:
+  mediamtx:
+    image: bluenviron/mediamtx:latest
+    container_name: ha-tv-mediamtx
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./mediamtx/mediamtx.yml:/mediamtx.yml:ro
+
+  renderer:
+    build: ./renderer
+    image: ha-tv-renderer:latest
+    container_name: ha-tv-renderer
+    restart: unless-stopped
+    shm_size: "512m"
+    environment:
+      TZ: "Europe/Kyiv"
+      HA_URL: "${HA_URL:-http://192.168.2.14:8123}"
+      HA_USER: "${HA_USER:-tv}"
+      HA_PASS: "${HA_PASS:?задайте HA_PASS в .env}"
+      DASH_PATH: "/local/tv.html?v=28"
+      RTSP_URL: "rtsp://192.168.2.130:8554/tv"
+      WIDTH: "1280"
+      HEIGHT: "720"
+      FPS: "3"
+      BITRATE: "1500k"
+      H264_PROFILE: "baseline"
+      AUDIO: "0"
+    volumes:
+      - ./data:/data
+      - ./renderer/run.py:/run.py:ro
+      - ./renderer/siren.py:/siren.py:ro
+    depends_on: [mediamtx]
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'ffmpeg .*rtsp' >/dev/null && pgrep -x chromium >/dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+
+  dvrip:
+    image: ha-tv-renderer:latest
+    container_name: ha-tv-dvrip
+    network_mode: host
+    restart: unless-stopped
+    entrypoint: ["python3","-u","/dvrip_server.py"]
+    volumes:
+      - ./dvrip/dvrip_server.py:/dvrip_server.py:ro
+      - ./dvrip/canned.json:/canned.json:ro
+    environment:
+      TZ: "Europe/Kyiv"
+      RTSP_URL: "rtsp://admin:admin@127.0.0.1:8554/tv"
+      PORT: "34567"
+      FPS: "3"
+      WIDTH: "1280"
+      HEIGHT: "720"
+    depends_on: [mediamtx]

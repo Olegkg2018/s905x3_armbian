@@ -1,0 +1,603 @@
+{
+"SystemFunction": {
+"Name": "SystemFunction",
+"Ret": 100,
+"SessionID": "0x00000083",
+"SystemFunction": {
+"AlarmFunction": {
+"AlarmConfig": true,
+"BlindDetect": false,
+"IPCAlarm": false,
+"LossDetect": true,
+"MotionDetect": true,
+"NetAbort": true,
+"NetAbortExtend": true,
+"NetAlarm": true,
+"NetIpConflict": true,
+"StorageFailure": true,
+"StorageLowSpace": true,
+"StorageNotExist": true,
+"VideoAnalyze": false
+},
+"CommFunction": {
+"CommRS232": true,
+"CommRS485": true
+},
+"EncodeFunction": {
+"CombineStream": false,
+"DoubleStream": true,
+"IFrameRange": false,
+"LowBitRate": true,
+"SnapStream": true,
+"WaterMark": false
+},
+"InputMethod": {
+"NoSupportChinese": false
+},
+"MobileDVR": {
+"CarPlateSet": false,
+"DVRBootType": false,
+"DelaySet": false,
+"GpsTiming": false,
+"StatusExchange": false
+},
+"NetServerFunction": {
+"MACProtocol": false,
+"MonitorPlatform": false,
+"NATProtocol": false,
+"Net3G": false,
+"NetARSP": true,
+"NetAlarmCenter": true,
+"NetAnJuP2P": false,
+"NetBaiduCloud": false,
+"NetBjlThy": false,
+"NetDAS": true,
+"NetDDNS": true,
+"NetDHCP": true,
+"NetDNS": true,
+"NetDataLink": false,
+"NetEmail": true,
+"NetFTP": true,
+"NetGlobalEyes": false,
+"NetGodEyeAlarm": false,
+"NetIPFilter": true,
+"NetKaiCong": false,
+"NetKeyboard": false,
+"NetLocalSdkPlatform": false,
+"NetMobile": false,
+"NetMobileWatch": false,
+"NetMutliCast": false,
+"NetNTP": true,
+"NetNat": true,
+"NetOpenVPN": false,
+"NetPMS": false,
+"NetPPPoE": true,
+"NetPhoneMultimediaMsg": false,
+"NetPhoneShortMsg": false,
+"NetPlatMega": false,
+"NetPlatShiSou": false,
+"NetPlatVVEye": false,
+"NetPlatXingWang": false,
+"NetRTSP": true,
+"NetSPVMN": false,
+"NetTUTKIOTC": false,
+"NetUPNP": true,
+"NetVPN": false,
+"NetWifi": false,
+"NetWifiMode": false,
+"PlatFormGBeyes": false,
+"XMHeartBeat": false
+},
+"OtherFunction": {
+"AlterDigitalName": true,
+"DownLoadPause": true,
+"HddLowSpaceUseMB": false,
+"HideDigital": false,
+"MusicFilePlay": false,
+"NOHDDRECORD": false,
+"NotSupportAH": true,
+"NotSupportAV": true,
+"NotSupportTalk": false,
+"SDsupportRecord": false,
+"ShowAlarmLevelRegion": true,
+"ShowFalseCheckTime": false,
+"SupportAbnormitysendmail": true,
+"SupportBT": true,
+"SupportC7Platform": false,
+"SupportCamareStyle": true,
+"SupportCameraMotorCtrl": false,
+"SupportCloudUpgrade": true,
+"SupportCommDataUpload": false,
+"SupportCustomOemInfo": false,
+"SupportDigitalEncode": false,
+"SupportDigitalPre": false,
+"SupportDimenCode": true,
+"SupportFishEye": false,
+"SupportImpRecord": false,
+"SupportMailTest": true,
+"SupportMaxPlayback": false,
+"SupportNVR": false,
+"SupportNetLocalSearch": false,
+"SupportOSDInfo": false,
+"SupportOnvifClient": false,
+"SupportPOS": false,
+"SupportPlayBackExactSeek": true,
+"SupportPtzIdleState": false,
+"SupportResumePtzState": false,
+"SupportSPVMNNasServer": false,
+"SupportSetDigIP": false,
+"SupportShowConnectStatus": false,
+"SupportShowProductType": false,
+"SupportSmallChnTitleFont": false,
+"SupportSnapCfg": false,
+"SupportStorageNAS": false,
+"SupportTextPassword": true,
+"SupportTimeZone": true,
+"SupportWriteLog": true,
+"Supportonviftitle": true,
+"SuppportChangeOnvifPort": true,
+"TitleAndStateUpload": true,
+"USBsupportRecord": false
+},
+"PreviewFunction": {
+"GUISet": true,
+"Tour": true
+},
+"TipShow": {
+"NoBeepTipShow": false,
+"NoEmailTipShow": false,
+"NoFTPTipShow": false
+}
+}
+},
+"SystemInfo": {
+"Name": "SystemInfo",
+"Ret": 100,
+"SessionID": "0x6d",
+"SystemInfo": {
+"AlarmInChannel": 2,
+"AlarmOutChannel": 1,
+"AudioInChannel": 1,
+"BuildTime": "2015-09-10 10:20:36",
+"CombineSwitch": 0,
+"DeviceRunTime": "0x0009726C",
+"DigChannel": 0,
+"EncryptVersion": "Unknown",
+"ExtraChannel": 0,
+"HardWare": "HI3518E_50H10L_S39",
+"HardWareVersion": "Unknown",
+"SerialNo": "0000000000000000",
+"SoftWareVersion": "V4.02.R12.00006510.10010.140700",
+"TalkInChannel": 1,
+"TalkOutChannel": 1,
+"UpdataTime": "",
+"UpdataType": "0x00000000",
+"VideoInChannel": 1,
+"VideoOutChannel": 1
+}
+},
+"ChannelTitle": {
+"ChannelTitle": [
+""
+],
+"Name": "ChannelTitle",
+"Ret": 100,
+"SessionID": "0x0000006D"
+},
+"General.General": {
+"General.General": {
+"AutoLogOut": 0,
+"AutoLogout": 0,
+"FontSize": 24,
+"IranCalendarEnable": 0,
+"LocalNo": 0,
+"MachineName": "",
+"OverWrite": "OverWrite",
+"ScreenAutoShutdown": 10,
+"ScreenSaveTime": 0,
+"SnapInterval": 0,
+"VideoOutPut": "Auto"
+},
+"Name": "General.General",
+"Ret": 100,
+"SessionID": "0x0000006D"
+},
+"General.Location": {
+"General.Location": {
+"DSTEnd": {
+"Day": 0,
+"Hour": 4,
+"Minute": 1,
+"Month": 10,
+"Week": 5,
+"Year": 1970
+},
+"DSTRule": "Off",
+"DSTStart": {
+"Day": 0,
+"Hour": 3,
+"Minute": 1,
+"Month": 3,
+"Week": 5,
+"Year": 1970
+},
+"DateFormat": "YYMMDD",
+"DateSeparator": "-",
+"Language": "Russian",
+"TimeFormat": "24",
+"VideoFormat": "PAL",
+"WorkDay": 62
+},
+"Name": "General.Location",
+"Ret": 100,
+"SessionID": "0x0000006D"
+},
+"EncodeCapability": {
+"EncodeCapability": {
+"ChannelMaxSetSync": 0,
+"CombEncodeInfo": [
+{
+"CompressionMask": "0x00000000",
+"Enable": true,
+"HaveAudio": true,
+"ResolutionMask": "0x00000000",
+"StreamType": "MainStream"
+},
+{
+"CompressionMask": "0x00000000",
+"Enable": false,
+"HaveAudio": false,
+"ResolutionMask": "0x00000000",
+"StreamType": "ExtraStream2"
+},
+{
+"CompressionMask": "0x00000000",
+"Enable": false,
+"HaveAudio": false,
+"ResolutionMask": "0x00000000",
+"StreamType": "ExtraStream3"
+},
+{
+"CompressionMask": "0x00000000",
+"Enable": false,
+"HaveAudio": false,
+"ResolutionMask": "0x00000000",
+"StreamType": "ExtraStream4"
+},
+{
+"CompressionMask": "0x00000000",
+"Enable": false,
+"HaveAudio": false,
+"ResolutionMask": "0x00000000",
+"StreamType": "JPEGStream"
+}
+],
+"Compression": "0x00000000",
+"EncodeInfo": [
+{
+"CompressionMask": "0x00000080",
+"Enable": true,
+"HaveAudio": true,
+"ResolutionMask": "0x53FFFFDD",
+"StreamType": "MainStream"
+},
+{
+"CompressionMask": "0x00000080",
+"Enable": true,
+"HaveAudio": true,
+"ResolutionMask": "0x73FFFFFD",
+"StreamType": "ExtraStream2"
+},
+{
+"CompressionMask": "0x00000000",
+"Enable": false,
+"HaveAudio": false,
+"ResolutionMask": "0x00000000",
+"StreamType": "ExtraStream3"
+},
+{
+"CompressionMask": "0x00000000",
+"Enable": false,
+"HaveAudio": false,
+"ResolutionMask": "0x00000000",
+"StreamType": "ExtraStream4"
+},
+{
+"CompressionMask": "0x00000080",
+"Enable": true,
+"HaveAudio": true,
+"ResolutionMask": "0x73FFFFFD",
+"StreamType": "JPEGStream"
+}
+],
+"ExImageSizePerChannel": [
+"0x00000009"
+],
+"ExImageSizePerChannelEx": [
+[
+"0x00000018",
+"0x00000000",
+"0x00000000",
+"0x00000018",
+"0x00000010",
+"0x00000078",
+"0x00000040",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000009",
+"0x00000009",
+"0x00000000",
+"0x00000009",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000",
+"0x00000000"
+]
+],
+"FourthStreamImageSize": [
+"0x00000000"
+],
+"ImageSizePerChannel": [
+"0x00000801"
+],
+"MaxBitrate": 49152,
+"MaxEncodePower": 38016000,
+"MaxEncodePowerPerChannel": [
+"0x02441400"
+],
+"ThirdStreamImageSize": [
+"0x00000000"
+]
+},
+"Name": "EncodeCapability",
+"Ret": 100,
+"SessionID": "0x0000006D"
+},
+"System.TimeZone": {
+"Name": "System.TimeZone",
+"Ret": 100,
+"SessionID": "0x0000006D",
+"System.TimeZone": {
+"FirstUserTimeZone": false,
+"timeMin": -180
+}
+},
+"OPUTCTimeSetting": {
+"Name": "",
+"Ret": 100,
+"SessionID": "0x0000006D"
+},
+"Simplify.Encode": {
+"Name": "Simplify.Encode",
+"Ret": 100,
+"SessionID": "0x0000006D",
+"Simplify.Encode": [
+{
+"ExtraFormat": {
+"AudioEnable": false,
+"Video": {
+"BitRate": 2048,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 4,
+"Quality": 3,
+"Resolution": "720P"
+},
+"VideoEnable": true
+},
+"MainFormat": {
+"AudioEnable": false,
+"Video": {
+"BitRate": 3072,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 2,
+"Quality": 5,
+"Resolution": "720P"
+},
+"VideoEnable": true
+}
+}
+]
+},
+"AVEnc.Encode": {
+"AVEnc.Encode": [
+{
+"EncodeStaticParam": [
+{
+"Level": 41,
+"Profile": 2
+}
+],
+"ExtraFormat": [
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 1024,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 4,
+"Quality": 3,
+"Resolution": "720P"
+},
+"VideoEnable": true
+},
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 256,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 2,
+"Quality": 3,
+"Resolution": "720P"
+},
+"VideoEnable": true
+},
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 256,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 2,
+"Quality": 3,
+"Resolution": "720P"
+},
+"VideoEnable": true
+}
+],
+"MainFormat": [
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 3072,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 2,
+"Quality": 5,
+"Resolution": "720P"
+},
+"VideoEnable": true
+},
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 2560,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 2,
+"Quality": 4,
+"Resolution": "720P"
+},
+"VideoEnable": false
+},
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 2560,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 25,
+"GOP": 2,
+"Quality": 4,
+"Resolution": "720P"
+},
+"VideoEnable": false
+}
+],
+"SnapFormat": [
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 512,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 1,
+"GOP": 2,
+"Quality": 4,
+"Resolution": "D1"
+},
+"VideoEnable": true
+},
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 512,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 1,
+"GOP": 2,
+"Quality": 4,
+"Resolution": "D1"
+},
+"VideoEnable": false
+},
+{
+"Audio": {
+"BitRate": 10,
+"MaxVolume": 10,
+"SampleRate": 10
+},
+"AudioEnable": false,
+"Video": {
+"BitRate": 512,
+"BitRateControl": "VBR",
+"Compression": "H.264",
+"FPS": 1,
+"GOP": 2,
+"Quality": 4,
+"Resolution": "D1"
+},
+"VideoEnable": false
+}
+]
+}
+],
+"Name": "AVEnc.Encode",
+"Ret": 100,
+"SessionID": "0x0000006D"
+}
+}

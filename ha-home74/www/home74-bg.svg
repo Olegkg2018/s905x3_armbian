@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><defs>
+<filter id="bl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="120"/></filter>
+<filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2"/><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .035 0"/></filter></defs>
+<rect width="1920" height="1080" fill="#0b1020"/>
+<g filter="url(#bl)">
+ <circle cx="380" cy="260" r="360" fill="#1d4ed8" opacity=".55"><animateTransform attributeName="transform" type="translate" values="0 0;260 120;80 280;0 0" dur="46s" repeatCount="indefinite"/></circle>
+ <circle cx="1580" cy="300" r="330" fill="#7c3aed" opacity=".5"><animateTransform attributeName="transform" type="translate" values="0 0;-300 160;-120 -60;0 0" dur="58s" repeatCount="indefinite"/></circle>
+ <circle cx="1020" cy="980" r="380" fill="#0d9488" opacity=".5"><animateTransform attributeName="transform" type="translate" values="0 0;-260 -140;220 -60;0 0" dur="52s" repeatCount="indefinite"/></circle>
+</g>
+<rect width="1920" height="1080" filter="url(#n)"/></svg>

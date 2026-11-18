@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru" translate="no"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<style>
+html{color-scheme:dark;background:#111a33}
+html,body{margin:0;color:var(--t,#e8eaf6);font:14px/1.4 Roboto,system-ui,"Segoe UI",sans-serif}
+body{padding:14px 16px 12px;box-sizing:border-box;background:linear-gradient(145deg,#16213f 0%,#101831 55%,#161233 100%)}
+.head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:8px;flex-wrap:wrap}
+.head b{font-size:13px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:#e8eaf6}
+.head span{font-size:11px;color:#a9b3d6}
+.warn{background:rgba(245,158,11,.16);border:1px solid rgba(245,158,11,.55);border-radius:10px;padding:9px 11px;margin:0 0 10px;font-size:13px;line-height:1.4;color:#ffe9c2}
+.hrs{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;font-size:10px;color:#a9b3d6;margin-bottom:3px}
+.hrs span{grid-column:span 3;text-align:left}
+.mk{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;height:14px}
+.mk i{font-style:normal;font-size:11px;line-height:14px;justify-self:center;color:#fff;animation:bob 1.4s ease-in-out infinite}
+.row{display:grid;grid-template-columns:repeat(24,1fr);gap:3px}
+.h{display:grid;grid-template-columns:1fr 1fr;gap:1px;height:34px;border-radius:7px;overflow:hidden;opacity:0;animation:in .4s ease forwards;animation-delay:var(--d,0ms)}
+.h i{display:block}
+.g{background:linear-gradient(#34d27a,#16a34a)}.r{background:linear-gradient(#ff6b6b,#dc2626)}.y{background:linear-gradient(#fbbf24,#d97706)}
+.h.now{box-shadow:0 0 0 2px #fff;animation:in .4s ease forwards,glow 1.6s ease-in-out .6s infinite;animation-delay:var(--d,0ms),.6s}
+.static .h{animation:none;opacity:1}.static .h.now{animation:glow 1.6s ease-in-out infinite}
+.nowtxt{margin:10px 0 4px;font-size:14px;color:#e8eaf6}.ok{color:#4ade80;font-weight:600}.bad{color:#ff7b7b;font-weight:600}.maybe{color:#fbbf24;font-weight:600}
+.sum{margin:4px 0;font-size:13px;color:#cdd5f0}.sum b{color:#e8eaf6}
+.day{margin:12px 0 4px;font-size:13px;font-weight:600;color:#e8eaf6}
+.leg{display:flex;gap:16px;margin-top:8px;font-size:12px;color:#a9b3d6;flex-wrap:wrap}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+.msg{color:#a9b3d6;padding:18px 4px}
+.warn.red{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.6);color:#ffd9d9}
+.warn.dim{background:rgba(148,163,184,.10);border-color:rgba(148,163,184,.35);color:#b6c0de;font-size:12px}
+@keyframes in{to{opacity:1}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 2px #fff,0 0 3px #fff}50%{box-shadow:0 0 0 2px #fff,0 0 18px #fff}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.h{opacity:1}}
+</style></head><body><div id="root"><div class="msg">загрузка…</div></div>
+<script>
+var ENT="sensor.dtek_schedule_today", root=document.getElementById("root"), last="", first=true;
+function p2(n){return String(n).padStart(2,"0")}
+function ymd(d){return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate())}
+function hhmm(i){return i>=48?"24:00":p2(Math.floor(i/2))+":"+(i%2?"30":"00")}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function hs(id){try{var h=parent.document.querySelector("home-assistant");return h&&h.hass&&h.hass.states?h.hass.states[id]:null}catch(e){return null}}
+function valid(c){return Array.isArray(c)&&c.length===48&&c.every(function(v){return v===0||v===1||v===2})}
+function runs(c){var out=[];for(var i=0;i<48;){var j=i;while(j<48&&c[j]===c[i])j++;if(c[i]===1)out.push(hhmm(i)+"–"+hhmm(j));i=j}return out}
+function fe(re){try{var h=parent.document.querySelector("home-assistant"),S=h&&h.hass&&h.hass.states;if(!S)return null;var k=Object.keys(S).filter(function(x){return re.test(x)})[0];return k?S[k]:null}catch(e){return null}}
+function isOn(e){return e&&e.state==="on"}
+function okv(e){return e&&e.state&&e.state!=="unavailable"&&e.state!=="unknown"&&e.state!=="none"}
+function hm(iso){var d=new Date(iso);return isNaN(d)?"":p2(d.getHours())+":"+p2(d.getMinutes())}
+function dtekPortal(){
+  var oa=fe(/^binary_sensor\.dtek(_account_\d+)?_outage_active$/),pm=fe(/^binary_sensor\.dtek(_account_\d+)?_planned_maintenance_active$/),
+      rt=fe(/^sensor\.dtek(_account_\d+)?_restore_time$/),rs=fe(/^sensor\.dtek(_account_\d+)?_outage_reason$/);
+  if(!oa&&!pm)return "";
+  var reason=okv(rs)?esc(rs.state):"",rest=okv(rt)?hm(rt.state):"";
+  if(isOn(pm))return '<div class="warn"><b>🔧 ДТЭК · плановые ремонтные работы</b>'+(reason?': '+reason:'')+(rest?'<br>Ожидаемое восстановление: '+rest:'')+'</div>';
+  if(isOn(oa))return '<div class="warn red"><b>⚡ ДТЭК · отключение идёт</b>'+(reason?': '+reason:'')+(rest?'<br>Ожидаемое восстановление: <b>'+rest+'</b>':'')+'</div>';
+  if(!okv(oa)&&!okv(pm))return '<div class="warn dim">Данные портала ДТЭК (причины, ремонты) сейчас недоступны — сайт блокирует запросы, повтор автоматически</div>';
+  return ""}
+function banners(){var b=dtekPortal(),ys=hs("sensor.yasno_dnipro_dnem_2_2_status_today"),yt=hs("sensor.yasno_dnipro_dnem_2_2_status_tomorrow");
+  if((ys&&ys.state==="emergency_shutdowns")||(yt&&yt.state==="emergency_shutdowns"))b+='<div class="warn">⚠ По данным ЯСНО действуют аварийные / стабилизационные отключения — график не гарантирован</div>';
+  return b}
+function checked(a){try{var d=new Date(a.fetched_at);return isNaN(d)?"":" · проверено "+p2(d.getHours())+":"+p2(d.getMinutes())}catch(e){return ""}}
+function theme(){try{var t=getComputedStyle(parent.document.documentElement).getPropertyValue("--primary-text-color").trim();if(t)document.documentElement.style.setProperty("--t",t)}catch(e){}}
+function cls(v){return v===1?"r":v===2?"y":"g"}
+function hoursRow(){var s='<div class="hrs">';for(var h=0;h<24;h+=3)s+='<span>'+p2(h)+'</span>';return s+'</div>'}
+function row(c,mark){var s='<div class="row">';for(var h=0;h<24;h++){var a=c[h*2],b=c[h*2+1],lbl=p2(h)+"–"+p2(h+1)+": "+(a===b?(a===1?"нет света":a===2?"возможно отключение":"свет есть"):"первые 30 мин — "+(a===1?"нет":"есть")+", вторые — "+(b===1?"нет":"есть"));
+  s+='<div class="h'+(mark>=0&&Math.floor(mark/2)===h?" now":"")+'" style="--d:'+(h*18)+'ms" title="'+lbl+'"><i class="'+cls(a)+'"></i><i class="'+cls(b)+'"></i></div>'}return s+'</div>'}
+function total(c){var n=c.filter(function(v){return v===1}).length;return n?"без света "+(n*0.5).toFixed(1)+" ч":"без отключений"}
+function nowText(c,idx){var v=c[idx],j=idx;while(j<48&&c[j]===v)j++;
+  if(v===1)return '<span class="bad">Сейчас по графику: НЕТ света</span>, включение в '+hhmm(j);
+  if(v===2)return '<span class="maybe">Сейчас возможно отключение</span> до '+hhmm(j);
+  return '<span class="ok">Сейчас по графику: свет есть</span>'+(j<48?', отключение в '+hhmm(j):' до конца суток')}
+function fit(){try{var h=document.documentElement.scrollHeight;var w=window.frameElement&&window.frameElement.parentElement;if(w)w.style.paddingTop=h+"px"}catch(e){}}
+function render(){
+  theme();var h=hs(ENT),now=new Date();
+  if(!h){root.innerHTML='<div class="msg">Нет данных ДТЭК (сенсор '+ENT+' недоступен)</div>';fit();return}
+  var a=h.attributes||{},today=ymd(now),tom=ymd(new Date(now.getTime()+864e5));
+  var bn=banners(),key=JSON.stringify([bn,a.cells,a.tomorrow_cells,a.date,a.tomorrow_date,a.updated,Math.floor(now.getTime()/60000)]);
+  if(key===last)return;last=key;
+  if(!(valid(a.cells)&&a.date===today)){root.innerHTML='<div class="msg">График ДТЭК на сегодня пока недоступен</div>'+bn;fit();return}
+  var idx=now.getHours()*2+(now.getMinutes()>=30?1:0),g=String(a.group||"").replace("GPV","");
+  var o='<div class="head"><b>График ДТЭК'+(g?' · очередь '+g:'')+'</b><span>'+(a.updated?'график обновлён '+a.updated:'')+checked(a)+'</span></div>'+bn;
+  o+=hoursRow()+'<div class="mk"><i style="grid-column:'+(Math.floor(idx/2)+1)+'">▼</i></div>'+row(a.cells,idx);
+  var nt=nowText(a.cells,idx),poa=fe(/^binary_sensor\.dtek(_account_\d+)?_outage_active$/),prt=fe(/^sensor\.dtek(_account_\d+)?_restore_time$/);
+  if(isOn(poa)&&okv(prt)&&new Date(prt.state)>now)nt='<span class="bad">Сейчас: НЕТ света</span>, включение в <b>'+hm(prt.state)+'</b> <span style="opacity:.7">(по данным ДТЭК)</span>';
+  o+='<div class="nowtxt">'+nt+'</div>';
+  var w=runs(a.cells);o+='<div class="sum"><b>Сегодня:</b> '+total(a.cells)+(w.length?' · '+w.join(', '):'')+'</div>';
+  if(valid(a.tomorrow_cells)&&a.tomorrow_date===tom){var wt=runs(a.tomorrow_cells);
+    o+='<div class="day">Завтра</div>'+hoursRow()+row(a.tomorrow_cells,-1)+'<div class="sum"><b>Завтра:</b> '+total(a.tomorrow_cells)+(wt.length?' · '+wt.join(', '):'')+'</div>'}
+  o+='<div class="leg"><span><i class="g"></i>свет есть</span><span><i class="r"></i>света нет</span><span><i class="y"></i>возможно</span><span>каждая плитка = 1 час, половинки по 30 мин</span></div>';
+  root.innerHTML=o;
+  if(!first)document.body.classList.add("static");
+  first=false;setTimeout(fit,50);setTimeout(function(){document.body.classList.add("static")},1800)}
+render();setInterval(render,15000);window.addEventListener("resize",fit);
+</script></body></html>

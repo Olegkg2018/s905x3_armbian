@@ -1,0 +1,63 @@
+template:
+
+  - sensor:
+
+      # напряжение сети: основной источник — датчик самого автомата (читает сеть и при выключенном
+      # автомате, обновление ~30 с); если автомат недоступен — запасной: счётчик Atorch
+      - name: "grid_voltage_effective"
+        unique_id: grid_voltage_effective
+        state: >
+          {% set v = states('sensor.ji_liang_duan_lu_qi_voltage') %}
+          {% if is_number(v) %}
+            {{ v | float }}
+          {% else %}
+            {{ states('sensor.realnoe_napriazhenie_seti') | float(0) }}
+          {% endif %}
+        unit_of_measurement: "V"
+        device_class: voltage
+        state_class: measurement
+        icon: mdi:flash
+
+      # мощность из сети по клещам (Zigbee TS060, обновление ~11 с): −(A+B), потребление < 0.
+      # Поправка +60 Вт при нагрузке > 150 Вт (клещи занижают на ~50–70 Вт относительно Atorch).
+      # Если клещи недоступны — запасной источник sensor.moshchnost_iz_seti (Atorch, обновление ~60 с).
+      - name: "grid_power_clamps"
+        unique_id: grid_power_clamps
+        state: >
+          {% set a = states('sensor.moshchnost_na_vkhode_mgnovennyi_spros_2') %}
+          {% set b = states('sensor.moshchnost_na_vkhode_mgnovennyi_spros_3') %}
+          {% if is_number(a) and is_number(b) %}
+            {% set raw = -(a | float + b | float) %}
+            {{ ((raw + 60) if raw > 150 else (raw if raw > 0 else 0)) | round(0) }}
+          {% else %}
+            {{ states('sensor.moshchnost_iz_seti') | float(0) }}
+          {% endif %}
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        icon: mdi:transmission-tower
+
+
+# --- binary_sensor (в том же списке template:)
+  - binary_sensor:
+
+      # плановое отключение света в ближайшие 3 часа и оно ещё не идёт.
+      # Источники: ДТЕК (если знает будущее окно: next_outage), иначе график YASNO; идущее отключение определяется
+      # по ДТЕК (outage_active) или по YASNO (включение раньше следующего отключения).
+      - name: "outage_soon"
+        unique_id: outage_soon
+        icon: mdi:flash-alert
+        state: >
+          {% set bad = ['unknown', 'unavailable', 'none', ''] %}
+          {% set dtek_active = is_state('binary_sensor.dtek_account_ACCOUNT_ID_outage_active', 'on') %}
+          {% set dn = states('sensor.dtek_account_ACCOUNT_ID_next_outage') %}
+          {% set o = states('sensor.yasno_dnipro_dnem_2_2_next_planned_outage') %}
+          {% set c = states('sensor.yasno_dnipro_dnem_2_2_next_connectivity') %}
+          {% set start = dn if dn not in bad else o %}
+          {% if dtek_active or start in bad %}
+            false
+          {% else %}
+            {% set dt = as_timestamp(start) - as_timestamp(now()) %}
+            {% set ongoing = dn in bad and c not in bad and as_timestamp(c) < as_timestamp(start) %}
+            {{ 0 < dt <= 10800 and not ongoing }}
+          {% endif %}
