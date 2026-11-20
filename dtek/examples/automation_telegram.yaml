@@ -1,0 +1,45 @@
+# Уведомления по данным интеграции ha-dtek (причина и ремонты): начало/конец отключения, плановые работы, смена причины.
+# Замените ACCOUNT_ID (в id сущностей ha-dtek есть номер счёта: sensor.dtek_account_<номер>_outage_reason) и notify-сущность.
+- alias: "ДТЭК — уведомления портала"
+  mode: queued
+  max: 5
+  triggers:
+    - {trigger: state, entity_id: sensor.dtek_account_ACCOUNT_ID_outage_reason, id: reason}
+    - {trigger: state, entity_id: binary_sensor.dtek_account_ACCOUNT_ID_planned_maintenance_active, from: "off", to: "on", id: maintenance}
+    - {trigger: state, entity_id: binary_sensor.dtek_account_ACCOUNT_ID_outage_active, from: "off", to: "on", id: start}
+    - {trigger: state, entity_id: binary_sensor.dtek_account_ACCOUNT_ID_outage_active, from: "on", to: "off", id: end}
+  conditions:
+    # портал за защитой Incapsula и часто «недоступен»: переходы «недоступно <-> значение» — не события
+    - condition: template
+      value_template: >
+        {{ trigger.from_state is not none
+           and trigger.from_state.state not in ['unavailable','unknown','none','']
+           and trigger.to_state.state not in ['unavailable','unknown','none','']
+           and trigger.from_state.state != trigger.to_state.state }}
+  actions:
+    - delay: {seconds: 5}
+    - choose:
+        - conditions: [{condition: trigger, id: start}]
+          sequence:
+            - action: notify.YOUR_NOTIFY
+              data:
+                title: "⚡ ДТЭК: отключение"
+                message: >
+                  Причина: {{ states('sensor.dtek_account_ACCOUNT_ID_outage_reason') }}
+                  Ожидаемое восстановление: {{ as_local(as_datetime(states('sensor.dtek_account_ACCOUNT_ID_restore_time'))).strftime('%H:%M %d.%m') }}
+        - conditions: [{condition: trigger, id: end}]
+          sequence:
+            - action: notify.YOUR_NOTIFY
+              data: {title: "💡 ДТЭК: отключение закончилось", message: "По данным портала ДТЭК отключение закончилось."}
+        - conditions: [{condition: trigger, id: maintenance}]
+          sequence:
+            - action: notify.YOUR_NOTIFY
+              data:
+                title: "🔧 ДТЭК: плановые ремонтные работы"
+                message: "Причина: {{ states('sensor.dtek_account_ACCOUNT_ID_outage_reason') }}"
+        - conditions:
+            - {condition: trigger, id: reason}
+            - {condition: state, entity_id: binary_sensor.dtek_account_ACCOUNT_ID_outage_active, state: "on"}
+          sequence:
+            - action: notify.YOUR_NOTIFY
+              data: {title: "📢 ДТЭК: причина изменилась", message: "Причина: {{ trigger.to_state.state }}"}

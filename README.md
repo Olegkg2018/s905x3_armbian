@@ -65,6 +65,7 @@ s905x3_armbian/
 ├── README.md                      # Главная документация (этот файл)
 ├── README_install_armbian.md      # Установка Armbian на eMMC
 ├── README_homeassistent.md        # Установка Home Assistant Core
+├── README_dtek.md                 # ДТЭК: откуда брать данные об отключениях и как показать карточкой
 ├── README_esp32.md                # ESP32-шлюз для JK-BMS и Sumry-инвертора
 ├── README_xiaozhi_voice.md        # Голосовой помощник Xiaozhi AI (аналог Алисы)
 ├── Add_AP.md                      # Настройка Wi-Fi точки доступа
@@ -98,6 +99,7 @@ s905x3_armbian/
 |---|---|
 | Установка Armbian | [README_install_armbian.md](README_install_armbian.md) |
 | Установка Home Assistant | [README_homeassistent.md](README_homeassistent.md) |
+| Отключения света ДТЭК в Home Assistant (данные, карточка) | [README_dtek.md](README_dtek.md) |
 | Голосовой помощник (Локальный сервер) | [README_xiaozhi_voice.md](README_xiaozhi_voice.md) |
 | ESP32-шлюз (BMS) | [README_esp32.md](README_esp32.md) |
 | Wi-Fi точка доступа | [Add_AP.md](Add_AP.md) |

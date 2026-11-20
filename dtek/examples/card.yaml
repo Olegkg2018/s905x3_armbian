@@ -1,0 +1,9 @@
+# Карточка «График ДТЭК» на дашборде: iframe на неизменяемый загрузчик (он каждый раз подтягивает
+# свежую страницу в обход кеша HA /local/, который держит файлы 31 день).
+type: iframe
+url: /local/dtek-strip.html?v=1
+aspect_ratio: 40%          # высоту страница подгоняет сама
+# Необязательно (card-mod): стеклянная рамка под стиль дашборда
+# card_mod:
+#   style: |
+#     ha-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14); border-radius: 22px; overflow: hidden; }

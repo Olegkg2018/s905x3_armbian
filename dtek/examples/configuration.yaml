@@ -1,0 +1,26 @@
+# --- 1. Сенсор графика на сегодня/завтра (компонент dtek_schedule из этого репозитория) ---
+sensor:
+  - platform: dtek_schedule
+    group: "GPV2.2"          # ВАША очередь: на странице отключений ДТЭК рядом с адресом «Черга 2.2» -> GPV2.2
+    interval_minutes: 15     # файл набора на GitHub (не сайт ДТЭК), график на сайте меняют в любое время
+    # url: https://raw.githubusercontent.com/Baskerville42/outage-data-ua/main/data/dnipro.json   # по умолчанию Днепр; для другого региона — свой файл
+    # fallback_url: ""       # запасной источник — страница сайта ДТЭК (редко; "" — отключить)
+
+# --- 2. «Скоро плановое отключение» (необязательно): для автоматизаций вроде «зарядить батарею заранее» ---
+# Без ha-dtek/ЯСНО замените условие своим: например, по ячейкам sensor.dtek_schedule_today.
+template:
+  - binary_sensor:
+      - name: "outage_soon"
+        unique_id: outage_soon
+        icon: mdi:flash-alert
+        state: >
+          {% set cells = state_attr('sensor.dtek_schedule_today', 'cells') %}
+          {% if cells is not iterable or cells | length != 48 %}
+            false
+          {% else %}
+            {# индекс текущей получасовой ячейки и ячейка через 3 часа (6 ячеек вперёд) #}
+            {% set i = now().hour * 2 + (1 if now().minute >= 30 else 0) %}
+            {% set ahead = cells[i:i + 7] %}
+            {# сейчас света нет — это не «скоро»; в ближайшие 3 часа появляется отключение #}
+            {{ cells[i] != 1 and 1 in ahead }}
+          {% endif %}
