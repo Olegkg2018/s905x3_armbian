@@ -1,5 +1,0 @@
-.env
-data/
-*.rollback-*
-*.bak*
-__pycache__/

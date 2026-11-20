@@ -1,8 +1,0 @@
-# Карточка для вида /dashboard-home73/pogoda3 (заменить текущую iframe-карточку).
-# /local/pogoda.html собирает pogoda_fetch.py (автоматизация 1788110000004, раз в 30 минут):
-# только блок от «Украина / … / Кривой Рог — Погода сейчас» до «Следите за изменениями…»,
-# фон прозрачный.
-type: iframe
-url: /local/pogoda.html
-aspect_ratio: 300%
-hide_background: true

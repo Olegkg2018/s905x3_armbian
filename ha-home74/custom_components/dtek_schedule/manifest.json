@@ -1,9 +1,0 @@
-{
-  "domain": "dtek_schedule",
-  "name": "DTEK schedule table",
-  "codeowners": [],
-  "documentation": "https://github.com/Olegkg2018/s905x3_armbian/tree/main/ha-home74/custom_components/dtek_schedule",
-  "iot_class": "cloud_polling",
-  "requirements": [],
-  "version": "0.1.0"
-}
